@@ -642,14 +642,53 @@
             </div>
             
             <div class="code-container">
-                <div class="code-header">
-                    <span class="code-title">ultimate-crm-scanner-v4.js</span>
-                    <div class="button-group">
-                        <button class="copy-btn" onclick="copyCode(this)">📋 Copiar Script</button>
-                    </div>
-                </div>
-                <pre><code>(function() {</code></pre>
-            </div>
+    <div class="code-header">
+        <span class="code-title">ultimate-crm-scanner.js</span>
+        <div class="button-group">
+            <button class="copy-btn" onclick="copyCode(this)">📋 Copiar Script</button>
+        </div>
+    </div>
+    <pre><code id="scanner-script">(function() {
+    console.clear();
+    console.log('%c🚀 ULTIMATE CRM & INTEGRATION SCANNER v4.0', 'background: linear-gradient(90deg, #FF8C42 0%, #FFB088 100%); color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px; font-weight: bold;');
+    console.log('%c══════════════════════════════════════════', 'color: #FF8C42;');
+    
+    const scanner = {
+        crms: {},
+        emailMarketing: {},
+        chatSupport: {},
+        automation: {},
+        payments: {},
+        forms: {},
+        analytics: {},
+        custom: {},
+        webhooks: [],
+        apis: [],
+        embeds: [],
+        totalIntegrations: 0
+    };
+    
+    // DETECTORES DE CRM
+    console.log('\n%c🎯 ESCANEANDO CRMs', 'background: #1e40af; color: white; padding: 5px; border-radius: 3px;');
+    
+    // HubSpot
+    if (window._hsq || window.hbspt) {
+        scanner.crms.hubspot = true;
+        console.log('✅ HubSpot detectado');
+    }
+    
+    // Salesforce
+    if (window.SFDCSessionVars || window.sforce) {
+        scanner.crms.salesforce = true;
+        console.log('✅ Salesforce detectado');
+    }
+    
+    // Más detectores aquí...
+    
+    window.integrationScan = scanner;
+    console.log('\n✅ Escaneo completo. Resultados en: window.integrationScan');
+})();</code></pre>
+</div>
             
             <div class="feature-highlight">
                 <h3>✨ Nuevas Características v4.0</h3>
@@ -685,40 +724,34 @@
     
     <script>
     function copyCode(btn) {
-        // Aquí va el script real que se copiará
-        const fullScript = `(function() {
-    console.clear();
-    console.log('%c🚀 ULTIMATE CRM & INTEGRATION SCANNER v4.0', 'background: linear-gradient(90deg, #FF8C42 0%, #FFB088 100%); color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px; font-weight: bold;');
-    console.log('%c══════════════════════════════════════════', 'color: #FF8C42;');
+    const scriptElement = document.getElementById('scanner-script');
+    const code = scriptElement ? scriptElement.textContent : '';
     
-    const scanner = {
-        crms: {},
-        emailMarketing: {},
-        chatSupport: {},
-        salesTools: {},
-        automation: {},
-        payments: {},
-        forms: {},
-        analytics: {},
-        aiTools: {},
-        noCode: {},
-        enterprise: {},
-        custom: {},
-        webhooks: [],
-        apis: [],
-        embeds: [],
-        totalIntegrations: 0,
-        detectionTimestamp: new Date().toISOString()
-    };
-    
-    // Tu script completo de detección aquí
-    console.log('\\n✅ Scanner iniciado. Navegue por el sitio para detectar integraciones.');
-    
-    // Aquí continúa todo el código de detección...
-    
-    window.integrationScan = scanner;
-    console.log('\\n✅ Resultados disponibles en: window.integrationScan');
-})();`;
+    navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        // Fallback para navegadores antiguos
+        const textArea = document.createElement('textarea');
+        textArea.value = code;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        btn.innerHTML = '✅ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}
         
         navigator.clipboard.writeText(fullScript).then(() => {
             const originalText = btn.innerHTML;
