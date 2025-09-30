@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta CAPI Deep Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1877f2 0%, #0e4eb4 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+        }
+        
+        .info-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .info-card li:last-child {
+            border-bottom: none;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .alert {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: #92400e;
+        }
+        
+        .alert strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .code-container {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            margin-top: 20px;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #444;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #1877f2, #0e4eb4);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+        }
+        
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        
+        pre {
+            color: #e5e5e5;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .results-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .results-section h3 {
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .result-item strong {
+            color: #1877f2;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .badge.active {
+            background: #10b981;
+            color: white;
+        }
+        
+        .badge.warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .badge.info {
+            background: #1877f2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Meta CAPI Deep Analyzer</h1>
+            <p>Análisis profundo de la configuración de Conversions API</p>
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>📊 Datos Detectados</h3>
+                <ul>
+                    <li>✅ Meta Pixel: 689780836331579</li>
+                    <li>✅ CAPI: Activo</li>
+                    <li>✅ GTM: GTM-NSZNWMPC</li>
+                    <li>⚠️ Eventos E-commerce: No detectados</li>
+                </ul>
+            </div>
+            
+            <div class="info-card">
+                <h3>🔌 Integraciones Relevantes</h3>
+                <ul>
+                    <li>Klaviyo (Email Marketing)</li>
+                    <li>AnyTrack (Tracking Universal)</li>
+                    <li>Segmetrics (Analytics)</li>
+                    <li>Microsoft Clarity</li>
+                </ul>
+            </div>
+            
+            <div class="info-card">
+                <h3>🎯 Posibles Fuentes CAPI</h3>
+                <ul>
+                    <li>Plugin oficial de Meta</li>
+                    <li>AnyTrack (probable)</li>
+                    <li>Plugin de terceros</li>
+                    <li>Implementación custom</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="main-card">
+            <div class="alert">
+                <strong>💡 Basándome en tu auditoría:</strong>
+                Detecté que AnyTrack está presente. Esta herramienta frecuentemente maneja el CAPI automáticamente. También veo Segmetrics y Klaviyo que podrían estar enviando eventos server-side.
+            </div>
+            
+            <h2 style="margin-bottom: 20px;">🔬 Script de Análisis Profundo CAPI</h2>
+            <p style="margin-bottom: 20px;">Este script te ayudará a identificar exactamente cómo está configurado el CAPI, qué plugin lo maneja, y qué eventos se están enviando:</p>
+            
+            <div class="code-container">
+                <div class="code-header">
+                    <span style="color: white;">capi-deep-analyzer.js</span>
+                    <button class="copy-btn" onclick="copyCode(this)">📋 Copiar Script</button>
+                </div>
+                <pre><code>(function() {
+    console.clear();
+    console.log('%c🔍 META CAPI DEEP ANALYZER', 'background: #1877f2; color: white; font-size: 16px; padding: 10px; border-radius: 5px;');
+    console.log('%c═══════════════════════════════════════', 'color: #1877f2;');
+    
+    const capiAnalysis = {
+        pixelId: '689780836331579',
+        capiSource: null,
+        serverEvents: [],
+        duplicatedEvents: [],
+        eventParameters: {},
+        plugins: {},
+        networkRequests: [],
+        implementation: null
+    };
+    
+    // 1. DETECTAR FUENTE DEL CAPI
+    console.log('\n%c🔎 ANALIZANDO FUENTE DEL CAPI', 'background: #059669; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Verificar AnyTrack (muy probable en tu caso)
+    if (window.anytrack || document.querySelector('script[src*="anytrack"]')) {
+        capiAnalysis.plugins.anytrack = true;
+        capiAnalysis.capiSource = 'AnyTrack';
+        console.log('✅ AnyTrack detectado - Probable fuente del CAPI');
+        
+        // Buscar configuración de AnyTrack
+        if (window.anytrack) {
+            console.log('  → AnyTrack Config:', window.anytrack);
+        }
+    }
+    
+    // Verificar Plugin oficial de Meta para WordPress
+    const metaPluginIndicators = [
+        'facebook-for-wordpress',
+        'facebook_for_wordpress',
+        'facebookpixel',
+        'facebook-pixel-for-wordpress'
+    ];
+    
+    let metaPluginFound = false;
+    metaPluginIndicators.forEach(indicator => {
+        if (document.querySelector(`script[src*="${indicator}"]`) || 
+            document.querySelector(`link[href*="${indicator}"]`)) {
+            metaPluginFound = true;
+            capiAnalysis.plugins.metaOfficial = true;
+            if (!capiAnalysis.capiSource) {
+                capiAnalysis.capiSource = 'Meta Official Plugin';
+            }
+            console.log('✅ Plugin oficial de Meta detectado');
+        }
+    });
+    
+    // Verificar PixelYourSite
+    if (window.pysOptions || document.querySelector('script[src*="pixelyoursite"]')) {
+        capiAnalysis.plugins.pixelYourSite = true;
+        if (!capiAnalysis.capiSource) {
+            capiAnalysis.capiSource = 'PixelYourSite';
+        }
+        console.log('✅ PixelYourSite detectado');
+        if (window.pysOptions) {
+            console.log('  → PYS Config:', window.pysOptions);
+        }
+    }
+    
+    // Verificar implementación via GTM
+    if (window.google_tag_manager && window.google_tag_manager['GTM-NSZNWMPC']) {
+        console.log('✅ GTM detectado - Verificando tags de Meta...');
+        
+        // Intentar acceder al dataLayer para ver eventos de GTM
+        if (window.dataLayer) {
+            window.dataLayer.forEach(item => {
+                if (item.event && (item.event.includes('facebook') || item.event.includes('fb'))) {
+                    capiAnalysis.plugins.gtmIntegration = true;
+                    console.log('  → Evento GTM de Facebook:', item);
+                }
+            });
+        }
+    }
+    
+    // 2. ANALIZAR EVENTOS Y PARÁMETROS
+    console.log('\n%c📊 ANALIZANDO EVENTOS Y PARÁMETROS', 'background: #7c3aed; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Interceptar fbq para capturar eventos
+    const originalFbq = window.fbq;
+    let capturedEvents = [];
+    
+    if (originalFbq) {
+        window.fbq = function() {
+            const args = Array.from(arguments);
+            capturedEvents.push({
+                type: args[0],
+                event: args[1],
+                params: args[2],
+                timestamp: new Date().toISOString()
+            });
+            
+            // Detectar event_id (indicador clave de CAPI)
+            if (args[2] && args[2].event_id) {
+                console.log('  🔑 Event ID detectado (CAPI activo):', args[2].event_id);
+                capiAnalysis.serverEvents.push({
+                    event: args[1],
+                    eventId: args[2].event_id,
+                    params: args[2]
+                });
+            }
+            
+            // Detectar external_id (otro indicador de CAPI)
+            if (args[2] && args[2].external_id) {
+                console.log('  👤 External ID detectado:', args[2].external_id);
+            }
+            
+            return originalFbq.apply(this, arguments);
+        };
+        
+        console.log('✅ Interceptor de fbq instalado - Navega por el sitio para capturar eventos');
+    }
+    
+    // 3. BUSCAR CONFIGURACIÓN EN SCRIPTS
+    console.log('\n%c📜 ANALIZANDO CONFIGURACIÓN EN SCRIPTS', 'background: #dc2626; color: white; padding: 5px; border-radius: 3px;');
+    
+    Array.from(document.scripts).forEach(script => {
+        const content = script.innerHTML;
+        
+        // Buscar configuración de CAPI
+        if (content.includes('server_event') || 
+            content.includes('event_id') || 
+            content.includes('external_id') ||
+            content.includes('action_source')) {
+            
+            console.log('✅ Script con configuración CAPI encontrado');
+            
+            // Extraer event_id patterns
+            const eventIdMatch = content.match(/event_id['":\s]+([a-zA-Z0-9_-]+)/g);
+            if (eventIdMatch) {
+                console.log('  → Event ID pattern:', eventIdMatch);
+            }
+            
+            // Buscar action_source (indica origen del evento)
+            const actionSourceMatch = content.match(/action_source['":\s]+(['"])(.*?)\1/);
+            if (actionSourceMatch) {
+                capiAnalysis.implementation = actionSourceMatch[2];
+                console.log('  → Action Source:', actionSourceMatch[2]);
+            }
+        }
+        
+        // Buscar configuración de AnyTrack
+        if (content.includes('anytrack') && content.includes('facebook')) {
+            console.log('✅ Configuración AnyTrack-Facebook encontrada');
+            capiAnalysis.plugins.anytracFbIntegration = true;
+        }
+    });
+    
+    // 4. ANALIZAR PETICIONES DE RED (necesita DevTools)
+    console.log('\n%c🌐 MONITOREO DE PETICIONES', 'background: #0891b2; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Interceptar fetch para detectar llamadas a Facebook
+    const originalFetch = window.fetch;
+    window.fetch = function() {
+        const url = arguments[0];
+        if (url && url.includes('facebook')) {
+            console.log('  📡 Petición a Facebook:', url);
+            capiAnalysis.networkRequests.push({
+                url: url,
+                timestamp: new Date().toISOString()
+            });
+        }
+        return originalFetch.apply(this, arguments);
+    };
+    
+    // 5. VERIFICAR CONFIGURACIÓN DE WOOCOMMERCE
+    console.log('\n%c🛒 CONFIGURACIÓN WOOCOMMERCE-CAPI', 'background: #10b981; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Buscar hooks de WooCommerce
+    if (window.wp && window.wp.hooks) {
+        console.log('✅ WordPress Hooks disponibles');
+        
+        // Listar hooks relacionados con tracking
+        const hooks = ['added_to_cart', 'removed_from_cart', 'checkout_completed'];
+        hooks.forEach(hook => {
+            if (window.wp.hooks.hasFilter(hook)) {
+                console.log(`  → Hook activo: ${hook}`);
+            }
+        });
+    }
+    
+    // Verificar AJAX de WooCommerce
+    if (window.wc_add_to_cart_params) {
+        console.log('✅ Parámetros de WooCommerce encontrados:', window.wc_add_to_cart_params);
+    }
+    
+    // 6. DETECCIÓN AVANZADA DE EVENTOS
+    console.log('\n%c🎯 CONFIGURACIÓN DE EVENTOS', 'background: #f59e0b; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Monitorear eventos del DOM
+    const monitoredEvents = ['click', 'submit'];
+    monitoredEvents.forEach(eventType => {
+        document.addEventListener(eventType, function(e) {
+            // Detectar clicks en botones de WooCommerce
+            if (e.target.classList.contains('add_to_cart_button') ||
+                e.target.classList.contains('single_add_to_cart_button')) {
+                console.log('  🛒 Add to Cart detectado');
+                
+                // Verificar si se dispara fbq
+                setTimeout(() => {
+                    if (capturedEvents.length > 0) {
+                        const lastEvent = capturedEvents[capturedEvents.length - 1];
+                        if (lastEvent.event === 'AddToCart' && lastEvent.params.event_id) {
+                            console.log('  ✅ CAPI activo para AddToCart:', lastEvent.params.event_id);
+                        }
+                    }
+                }, 100);
+            }
+        }, true);
+    });
+    
+    // 7. RESUMEN Y DIAGNÓSTICO
+    console.log('\n%c📋 DIAGNÓSTICO CAPI', 'background: #059669; color: white; font-size: 14px; padding: 10px; border-radius: 5px;');
+    console.log('%c═══════════════════════════════════════', 'color: #059669;');
+    
+    setTimeout(() => {
+        // Diagnóstico basado en lo encontrado
+        console.log('\n🔍 FUENTE PROBABLE DEL CAPI:');
+        if (capiAnalysis.plugins.anytrack) {
+            console.log('  ✅ AnyTrack está manejando el CAPI');
+            console.log('  → AnyTrack sincroniza automáticamente eventos browser-side con server-side');
+            console.log('  → Verifica tu dashboard de AnyTrack para configuración');
+        }
+        
+        if (capiAnalysis.plugins.metaOfficial) {
+            console.log('  ✅ Plugin oficial de Meta puede estar enviando eventos server-side');
+        }
+        
+        if (capiAnalysis.plugins.gtmIntegration) {
+            console.log('  ✅ GTM puede estar configurado con tags server-side');
+        }
+        
+        console.log('\n📊 EVENTOS CAPTURADOS:');
+        if (capturedEvents.length > 0) {
+            capturedEvents.forEach(evt => {
+                console.log(`  → ${evt.event}:`, evt.params);
+            });
+        } else {
+            console.log('  ⚠️ No se han capturado eventos aún. Navega por el sitio para capturarlos.');
+        }
+        
+        console.log('\n💡 RECOMENDACIONES:');
+        console.log('1. Verifica el dashboard de AnyTrack en https://dashboard.anytrack.io');
+        console.log('2. En AnyTrack, revisa: Integrations > Facebook Conversions API');
+        console.log('3. Confirma que el Access Token de Facebook esté configurado');
+        console.log('4. Verifica los Event Match Quality en Facebook Events Manager');
+        console.log('5. Usa Facebook Pixel Helper extension para validar eventos');
+        
+        // Guardar resultados
+        window.capiAnalysis = capiAnalysis;
+        console.log('\n✅ Análisis completo. Resultados en: window.capiAnalysis');
+        
+    }, 2000);
+    
+    // 8. FUNCIÓN PARA TEST EN VIVO
+    window.testCAPIEvent = function() {
+        console.log('\n%c🧪 TEST DE EVENTO CAPI', 'background: #dc2626; color: white; padding: 5px;');
+        
+        // Generar un event_id único
+        const testEventId = 'test_' + Date.now();
+        
+        // Disparar un evento de prueba
+        if (window.fbq) {
+            window.fbq('track', 'TestEvent', {
+                value: 1,
+                currency: 'USD',
+                event_id: testEventId,
+                action_source: 'website',
+                test_event_code: 'TEST123' // Código de prueba para Facebook
+            });
+            
+            console.log('✅ Evento de prueba enviado');
+            console.log('  → Event ID:', testEventId);
+            console.log('  → Verifica en Facebook Events Manager en ~5 minutos');
+            console.log('  → Si CAPI está activo, verás el evento duplicado (browser + server)');
+        }
+    };
+    
+    console.log('\n💡 TIP: Ejecuta testCAPIEvent() para enviar un evento de prueba');
+    
+})();</code></pre>
+            </div>
+            
+            <div class="results-section">
+                <h3>🎯 Análisis de tu Configuración</h3>
+                
+                <div class="result-item">
+                    <strong>AnyTrack Detectado:</strong>
+                    Esta es muy probablemente tu fuente de CAPI. AnyTrack automáticamente duplica eventos del lado del cliente al servidor.
+                    <span class="badge active">ACTIVO</span>
+                </div>
+                
+                <div class="result-item">
+                    <strong>Klaviyo Integration:</strong>
+                    Klaviyo también puede estar enviando eventos de conversión a Meta vía API.
+                    <span class="badge info">POSIBLE</span>
+                </div>
+                
+                <div class="result-item">
+                    <strong>Eventos E-commerce:</strong>
+                    No se detectaron eventos estándar (ViewContent, AddToCart, Purchase). Necesitas verificar la configuración.
+                    <span class="badge warning">REVISAR</span>
+                </div>
+                
+                <div class="result-item">
+                    <strong>Próximos Pasos:</strong>
+                    <ol style="margin-top: 10px; margin-left: 20px;">
+                        <li>Ejecuta el script de arriba en el sitio</li>
+                        <li>Navega por productos y agrega algo al carrito</li>
+                        <li>Revisa los eventos capturados en la consola</li>
+                        <li>Verifica en Facebook Events Manager si hay eventos duplicados (browser + server)</li>
+                        <li>Accede a tu dashboard de AnyTrack para ver la configuración del CAPI</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copiado!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
