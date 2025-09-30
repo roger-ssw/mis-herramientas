@@ -13,9 +13,29 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 140, 66, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 140, 66, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 140, 66, 0.08) 0%, transparent 50%);
             min-height: 100vh;
             padding: 20px;
+            color: #ffffff;
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF8C42;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFB088;
         }
         
         .container {
@@ -25,26 +45,37 @@
         
         .header {
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #FF8C42 0%, #FFB088 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 140, 66, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
         }
         
         .header p {
             font-size: 1.1em;
-            opacity: 0.9;
+            color: #a0a0a0;
+            font-weight: 300;
         }
         
         .main-card {
-            background: white;
+            background: #141414;
+            border: 1px solid #222;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
         
         .script-section {
@@ -53,11 +84,12 @@
         
         .section-title {
             font-size: 1.3em;
-            color: #333;
-            margin-bottom: 15px;
+            color: #FF8C42;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 600;
         }
         
         .section-title::before {
@@ -65,79 +97,105 @@
         }
         
         .code-container {
-            background: #1e1e1e;
-            border-radius: 10px;
-            padding: 20px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
             position: relative;
-            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         
         .code-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #333;
         }
         
         .code-title {
-            color: #fff;
-            font-size: 0.9em;
+            color: #FF8C42;
+            font-size: 1em;
             font-weight: 600;
         }
         
         .copy-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: linear-gradient(135deg, #FF8C42, #FFB088);
+            color: #0a0a0a;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85em;
+            font-size: 0.9em;
+            font-weight: 600;
             transition: all 0.3s;
         }
         
         .copy-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 20px rgba(255, 140, 66, 0.4);
         }
         
         .copy-btn.copied {
             background: #10b981;
+            color: white;
         }
         
         pre {
             color: #e5e5e5;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 0.9em;
+            font-size: 0.85em;
             line-height: 1.6;
             overflow-x: auto;
             white-space: pre-wrap;
             word-wrap: break-word;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        pre::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        pre::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        
+        pre::-webkit-scrollbar-thumb {
+            background: #FF8C42;
+            border-radius: 3px;
         }
         
         .instructions {
-            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 140, 66, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
         }
         
         .instructions h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.1em;
+            color: #FF8C42;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
         }
         
         .instructions ol {
             margin-left: 20px;
-            color: #555;
+            color: #a0a0a0;
         }
         
         .instructions li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             line-height: 1.6;
+            transition: color 0.2s;
+        }
+        
+        .instructions li:hover {
+            color: #FFB088;
         }
         
         .feature-grid {
@@ -148,41 +206,129 @@
         }
         
         .feature-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
+            background: #0a0a0a;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #222;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #FF8C42, #FFB088);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 140, 66, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 140, 66, 0.1);
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
         
         .feature-card h4 {
-            margin-bottom: 10px;
+            color: #FF8C42;
+            margin-bottom: 12px;
             font-size: 1.1em;
+            font-weight: 600;
         }
         
         .feature-card p {
             font-size: 0.9em;
-            opacity: 0.9;
-            line-height: 1.5;
+            color: #a0a0a0;
+            line-height: 1.6;
         }
         
         .warning {
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 15px;
-            border-radius: 6px;
-            margin: 20px 0;
+            background: rgba(255, 140, 66, 0.1);
+            border-left: 4px solid #FF8C42;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border: 1px solid rgba(255, 140, 66, 0.2);
         }
         
         .warning strong {
-            color: #92400e;
+            color: #FF8C42;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .warning p {
+            color: #FFB088;
+            line-height: 1.6;
         }
         
         .highlight {
-            background: #fbbf24;
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: #1e1e1e;
+            background: rgba(255, 140, 66, 0.2);
+            color: #FFB088;
+            padding: 3px 8px;
+            border-radius: 4px;
             font-weight: 600;
+            border: 1px solid rgba(255, 140, 66, 0.3);
+        }
+        
+        /* Stats cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: rgba(255, 140, 66, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FF8C42, #FFB088);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            color: #808080;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-card {
+                padding: 25px;
+            }
         }
     </style>
 </head>
@@ -191,6 +337,25 @@
         <div class="header">
             <h1>🛠️ WP/WooCommerce Integration Auditor</h1>
             <p>Herramienta completa para auditar integraciones, píxeles y APIs en WordPress</p>
+        </div>
+        
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number">20+</div>
+                <div class="stat-label">Píxeles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Analytics</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">E-commerce</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">APIs</div>
+            </div>
         </div>
         
         <div class="main-card">
@@ -206,7 +371,8 @@
             </div>
             
             <div class="warning">
-                <strong>⚠️ Importante:</strong> Este script debe ejecutarse en el sitio que estás auditando. Detectará automáticamente Meta Pixel, CAPI, Google Analytics, y otras integraciones comunes.
+                <strong>⚠️ Importante:</strong>
+                <p>Este script debe ejecutarse en el sitio que estás auditando. Detectará automáticamente Meta Pixel, CAPI, Google Analytics, y otras integraciones comunes.</p>
             </div>
             
             <div class="script-section">
@@ -218,8 +384,8 @@
                     </div>
                     <pre><code>(function() {
     console.clear();
-    console.log('%c🔍 INICIANDO AUDITORÍA DE INTEGRACIONES', 'background: #667eea; color: white; font-size: 16px; padding: 10px; border-radius: 5px;');
-    console.log('%c═══════════════════════════════════════', 'color: #667eea;');
+    console.log('%c🔍 INICIANDO AUDITORÍA DE INTEGRACIONES', 'background: #FF8C42; color: white; font-size: 16px; padding: 10px; border-radius: 5px;');
+    console.log('%c═══════════════════════════════════════', 'color: #FF8C42;');
     
     const audit = {
         wordpress: {},
@@ -569,7 +735,8 @@
             </div>
             
             <div class="warning" style="margin-top: 30px;">
-                <strong>💡 Tip Pro:</strong> Después de ejecutar el script, puedes inspeccionar manualmente <span class="highlight">window.auditResults</span> en la consola para explorar los detalles específicos de cada integración. También puedes ejecutar <span class="highlight">downloadAuditResults()</span> para guardar un reporte completo.
+                <strong>💡 Tip Pro:</strong>
+                <p>Después de ejecutar el script, puedes inspeccionar manualmente <span class="highlight">window.auditResults</span> en la consola para explorar los detalles específicos de cada integración. También puedes ejecutar <span class="highlight">downloadAuditResults()</span> para guardar un reporte completo.</p>
             </div>
         </div>
     </div>
