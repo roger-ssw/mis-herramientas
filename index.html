@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔧 Mis Herramientas de Auditoría</title>
+    <title>🔧 Herramientas de Auditoría Web - Roger SSW</title>
     <style>
         * {
             margin: 0;
@@ -11,92 +11,246 @@
             box-sizing: border-box;
         }
         body {
-            font-family: -apple-system, system-ui, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 140, 66, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 140, 66, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 140, 66, 0.08) 0%, transparent 50%);
             min-height: 100vh;
             padding: 40px 20px;
+            color: #ffffff;
         }
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
-        h1 {
-            color: white;
+        .header {
             text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 50px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #FF8C42 0%, #FFB088 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 140, 66, 0.3);
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #a0a0a0;
+            font-weight: 300;
         }
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
         .tool-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 35px;
             text-decoration: none;
             color: inherit;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: block;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .tool-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #FF8C42, #FFB088);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transform: translateY(-8px);
+            border-color: #FF8C42;
+            box-shadow: 
+                0 20px 60px rgba(255, 140, 66, 0.15),
+                0 0 0 1px rgba(255, 140, 66, 0.2);
         }
-        .tool-card h2 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 1.4em;
+        .tool-card:hover::before {
+            opacity: 1;
         }
-        .tool-card p {
-            color: #666;
-            line-height: 1.6;
-            font-size: 0.95em;
+        .tool-card:hover::after {
+            transform: scaleX(1);
         }
         .emoji {
-            font-size: 2.5em;
-            margin-bottom: 15px;
+            font-size: 3em;
+            margin-bottom: 20px;
             display: block;
+            filter: grayscale(20%);
+        }
+        h2 {
+            color: #FF8C42;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+        p {
+            color: #b0b0b0;
+            line-height: 1.7;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+        .features {
+            list-style: none;
+            font-size: 0.9em;
+            color: #808080;
+        }
+        .features li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+            transition: color 0.2s;
+        }
+        .features li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #FF8C42;
+            font-weight: bold;
+        }
+        .tool-card:hover .features li {
+            color: #a0a0a0;
         }
         .badge {
             display: inline-block;
-            background: #10b981;
-            color: white;
-            padding: 4px 8px;
+            background: rgba(255, 140, 66, 0.15);
+            color: #FF8C42;
+            border: 1px solid rgba(255, 140, 66, 0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .tool-card:hover .badge {
+            background: rgba(255, 140, 66, 0.25);
+            border-color: #FF8C42;
+            box-shadow: 0 0 10px rgba(255, 140, 66, 0.3);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #606060;
+            font-size: 0.9em;
+            padding-top: 30px;
+            border-top: 1px solid #1a1a1a;
+        }
+        .footer p {
+            color: #606060;
+        }
+        
+        /* Animación sutil de fondo */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .tool-card:nth-child(1) { animation: float 6s ease-in-out infinite; }
+        .tool-card:nth-child(2) { animation: float 6s ease-in-out 2s infinite; }
+        .tool-card:nth-child(3) { animation: float 6s ease-in-out 4s infinite; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            .tool-card {
+                animation: none !important;
+            }
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF8C42;
             border-radius: 4px;
-            font-size: 0.75em;
-            margin-top: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFB088;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔧 Herramientas de Auditoría Web</h1>
+        <div class="header">
+            <h1>🔧 Herramientas de Auditoría Web</h1>
+            <p class="subtitle">Scripts profesionales para auditar integraciones, tracking y CRMs</p>
+        </div>
         
         <div class="tools-grid">
             <a href="wp-integration-auditor.html" class="tool-card">
                 <span class="emoji">🔍</span>
                 <h2>WP Integration Auditor</h2>
-                <p>Audita WordPress, WooCommerce, píxeles de Meta, Google Analytics, y más de 20 integraciones.</p>
+                <p>Auditoría completa para WordPress y WooCommerce. Detecta píxeles, tracking y configuraciones.</p>
+                <ul class="features">
+                    <li>Meta Pixel & CAPI</li>
+                    <li>Google Analytics & GTM</li>
+                    <li>20+ integraciones</li>
+                    <li>Eventos e-commerce</li>
+                </ul>
                 <span class="badge">WordPress</span>
             </a>
             
             <a href="meta-capi-deep-analyzer.html" class="tool-card">
                 <span class="emoji">📘</span>
                 <h2>Meta CAPI Analyzer</h2>
-                <p>Análisis profundo de Facebook Pixel y Conversions API. Detecta eventos, configuración y fuentes.</p>
+                <p>Análisis profundo de Facebook Pixel y Conversions API para identificar configuraciones.</p>
+                <ul class="features">
+                    <li>Detección de CAPI</li>
+                    <li>Event IDs tracking</li>
+                    <li>AnyTrack & plugins</li>
+                    <li>Test de eventos</li>
+                </ul>
                 <span class="badge">Meta/Facebook</span>
             </a>
             
             <a href="ultimate-crm-integration-scanner.html" class="tool-card">
                 <span class="emoji">🚀</span>
                 <h2>Ultimate CRM Scanner</h2>
-                <p>Detecta 100+ CRMs, automation, webhooks, APIs, payment processors y herramientas de marketing.</p>
+                <p>Scanner avanzado que detecta 100+ CRMs, herramientas de automation y APIs.</p>
+                <ul class="features">
+                    <li>50+ CRMs empresariales</li>
+                    <li>Webhooks & APIs</li>
+                    <li>Payment processors</li>
+                    <li>Chat & support tools</li>
+                </ul>
                 <span class="badge">CRM/Automation</span>
             </a>
+        </div>
+        
+        <div class="footer">
+            <p>🛠️ Herramientas de auditoría web by Roger SSW • 2024</p>
         </div>
     </div>
 </body>
