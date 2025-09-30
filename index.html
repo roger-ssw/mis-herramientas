@@ -17,7 +17,7 @@
             padding: 40px 20px;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
         h1 {
@@ -29,17 +29,18 @@
         }
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
         .tool-card {
             background: white;
             border-radius: 15px;
-            padding: 25px;
+            padding: 30px;
             text-decoration: none;
             color: inherit;
             transition: transform 0.3s, box-shadow 0.3s;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: block;
         }
         .tool-card:hover {
             transform: translateY(-5px);
@@ -48,41 +49,53 @@
         .tool-card h2 {
             color: #667eea;
             margin-bottom: 10px;
-            font-size: 1.3em;
+            font-size: 1.4em;
         }
         .tool-card p {
             color: #666;
-            line-height: 1.5;
+            line-height: 1.6;
             font-size: 0.95em;
         }
         .emoji {
-            font-size: 2em;
+            font-size: 2.5em;
             margin-bottom: 15px;
             display: block;
+        }
+        .badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔧 Mis Herramientas de Auditoría</h1>
+        <h1>🔧 Herramientas de Auditoría Web</h1>
         
         <div class="tools-grid">
             <a href="wp-integration-auditor.html" class="tool-card">
                 <span class="emoji">🔍</span>
                 <h2>WP Integration Auditor</h2>
-                <p>Audita WordPress, WooCommerce, píxeles y tracking</p>
+                <p>Audita WordPress, WooCommerce, píxeles de Meta, Google Analytics, y más de 20 integraciones.</p>
+                <span class="badge">WordPress</span>
             </a>
             
             <a href="meta-capi-deep-analyzer.html" class="tool-card">
                 <span class="emoji">📘</span>
                 <h2>Meta CAPI Analyzer</h2>
-                <p>Análisis profundo de Facebook Pixel y Conversions API</p>
+                <p>Análisis profundo de Facebook Pixel y Conversions API. Detecta eventos, configuración y fuentes.</p>
+                <span class="badge">Meta/Facebook</span>
             </a>
             
-            <a href="ultimate-crm-scanner.html" class="tool-card">
+            <a href="ultimate-crm-integration-scanner.html" class="tool-card">
                 <span class="emoji">🚀</span>
                 <h2>Ultimate CRM Scanner</h2>
-                <p>Detecta 100+ CRMs, automation, webhooks y APIs</p>
+                <p>Detecta 100+ CRMs, automation, webhooks, APIs, payment processors y herramientas de marketing.</p>
+                <span class="badge">CRM/Automation</span>
             </a>
         </div>
     </div>
