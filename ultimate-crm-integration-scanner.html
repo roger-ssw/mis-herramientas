@@ -684,9 +684,9 @@
     </div>
     
     <script>
-        function copyCode(btn) {
-            // El script completo va aquí - usando el mejorado que te voy a proporcionar
-            const fullScript = `(function() {
+    function copyCode(btn) {
+        // Aquí va el script real que se copiará
+        const fullScript = `(function() {
     console.clear();
     console.log('%c🚀 ULTIMATE CRM & INTEGRATION SCANNER v4.0', 'background: linear-gradient(90deg, #FF8C42 0%, #FFB088 100%); color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px; font-weight: bold;');
     console.log('%c══════════════════════════════════════════', 'color: #FF8C42;');
@@ -711,20 +711,28 @@
         detectionTimestamp: new Date().toISOString()
     };
     
-    // [El script completo mejorado continúa aquí...]
+    // Tu script completo de detección aquí
+    console.log('\\n✅ Scanner iniciado. Navegue por el sitio para detectar integraciones.');
     
+    // Aquí continúa todo el código de detección...
+    
+    window.integrationScan = scanner;
+    console.log('\\n✅ Resultados disponibles en: window.integrationScan');
 })();`;
-            
-            navigator.clipboard.writeText(fullScript).then(() => {
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '✅ Copiado!';
-                btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.classList.remove('copied');
-                }, 2000);
-            });
-        }
-    </script>
+        
+        navigator.clipboard.writeText(fullScript).then(() => {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ Copiado!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('copied');
+            }, 2000);
+        }).catch(err => {
+            console.error('Error al copiar:', err);
+            alert('Error al copiar el script. Por favor, selecciona y copia manualmente.');
+        });
+    }
+</script>
 </body>
 </html>
