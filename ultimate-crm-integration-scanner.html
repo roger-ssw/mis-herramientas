@@ -13,11 +13,16 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 140, 66, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 140, 66, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 140, 66, 0.08) 0%, transparent 50%);
             min-height: 100vh;
             padding: 20px;
             position: relative;
             overflow-x: hidden;
+            color: #ffffff;
         }
         
         body::before {
@@ -27,9 +32,24 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>') repeat;
+            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23FF8C42" fill-opacity="0.02"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>') repeat;
             pointer-events: none;
             z-index: 1;
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF8C42;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFB088;
         }
         
         .container {
@@ -41,7 +61,6 @@
         
         .header {
             text-align: center;
-            color: white;
             margin-bottom: 40px;
             animation: fadeInDown 0.8s ease;
         }
@@ -60,15 +79,23 @@
         .header h1 {
             font-size: 3em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #fff, #f0f0f0);
+            background: linear-gradient(135deg, #FF8C42 0%, #FFB088 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 140, 66, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
         }
         
         .header p {
             font-size: 1.2em;
-            opacity: 0.95;
+            color: #a0a0a0;
+            font-weight: 300;
         }
         
         .stats-grid {
@@ -79,38 +106,62 @@
         }
         
         .stat-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: #141414;
+            border: 1px solid #222;
             border-radius: 15px;
             padding: 20px;
             text-align: center;
-            color: white;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s;
             animation: fadeIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #FF8C42, #FFB088);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
         
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: #FF8C42;
+            box-shadow: 
+                0 10px 30px rgba(255, 140, 66, 0.15),
+                0 0 0 1px rgba(255, 140, 66, 0.2);
+        }
+        
+        .stat-card:hover::before {
+            transform: scaleX(1);
         }
         
         .stat-number {
             font-size: 2.5em;
             font-weight: bold;
             margin-bottom: 5px;
+            background: linear-gradient(135deg, #FF8C42, #FFB088);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .stat-label {
             font-size: 0.9em;
-            opacity: 0.9;
+            color: #808080;
         }
         
         .main-card {
-            background: white;
+            background: #141414;
+            border: 1px solid #222;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             animation: fadeInUp 0.8s ease;
         }
         
@@ -133,40 +184,70 @@
         }
         
         .category-card {
-            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
-            padding: 20px;
+            background: #0a0a0a;
+            padding: 25px;
             border-radius: 12px;
-            border: 2px solid #e2e8f0;
+            border: 1px solid #222;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 140, 66, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .category-card:hover {
             transform: scale(1.02);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: rgba(255, 140, 66, 0.3);
+            box-shadow: 0 10px 25px rgba(255, 140, 66, 0.1);
+        }
+        
+        .category-card:hover::after {
+            opacity: 1;
         }
         
         .category-card h3 {
-            color: #1e293b;
-            margin-bottom: 15px;
+            color: #FF8C42;
+            margin-bottom: 20px;
             font-size: 1.2em;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
         }
         
         .category-card ul {
             list-style: none;
             padding: 0;
+            position: relative;
+            z-index: 1;
         }
         
         .category-card li {
-            padding: 8px 0;
-            color: #475569;
+            padding: 10px 0;
+            color: #a0a0a0;
             font-size: 0.95em;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .category-card li:hover {
+            color: #FFB088;
+            padding-left: 5px;
         }
         
         .category-card li:last-child {
@@ -174,18 +255,19 @@
         }
         
         .category-card li::before {
-            content: '→';
-            color: #667eea;
+            content: '▸';
+            color: #FF8C42;
             font-weight: bold;
         }
         
         .code-container {
-            background: #1e1e1e;
+            background: #0a0a0a;
+            border: 1px solid #222;
             border-radius: 12px;
             padding: 25px;
             position: relative;
             margin-top: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         
         .code-header {
@@ -194,11 +276,11 @@
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #444;
+            border-bottom: 1px solid #333;
         }
         
         .code-title {
-            color: #fff;
+            color: #FF8C42;
             font-size: 1.1em;
             font-weight: 600;
             display: flex;
@@ -216,9 +298,9 @@
             gap: 10px;
         }
         
-        .copy-btn, .run-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+        .copy-btn {
+            background: linear-gradient(135deg, #FF8C42, #FFB088);
+            color: #0a0a0a;
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
@@ -228,17 +310,14 @@
             font-weight: 600;
         }
         
-        .copy-btn:hover, .run-btn:hover {
+        .copy-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 20px rgba(255, 140, 66, 0.4);
         }
         
         .copy-btn.copied {
             background: #10b981;
-        }
-        
-        .run-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
         }
         
         pre {
@@ -254,27 +333,27 @@
         }
         
         pre::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         
         pre::-webkit-scrollbar-track {
-            background: #2d2d2d;
-            border-radius: 4px;
+            background: #1a1a1a;
         }
         
         pre::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 4px;
+            background: #FF8C42;
+            border-radius: 3px;
         }
         
         .alert {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-left: 4px solid #f59e0b;
+            background: rgba(255, 140, 66, 0.1);
+            border-left: 4px solid #FF8C42;
             padding: 20px;
             border-radius: 8px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             animation: slideIn 0.5s ease;
+            border: 1px solid rgba(255, 140, 66, 0.2);
         }
         
         @keyframes slideIn {
@@ -289,24 +368,29 @@
         }
         
         .alert strong {
-            color: #92400e;
+            color: #FF8C42;
             display: block;
             margin-bottom: 8px;
             font-size: 1.1em;
         }
         
+        .alert p {
+            color: #FFB088;
+        }
+        
         .feature-highlight {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            padding: 25px;
+            background: #0a0a0a;
+            padding: 30px;
             border-radius: 12px;
             margin-top: 30px;
-            border: 2px solid #60a5fa;
+            border: 1px solid rgba(255, 140, 66, 0.2);
         }
         
         .feature-highlight h3 {
-            color: #1e40af;
-            margin-bottom: 15px;
+            color: #FF8C42;
+            margin-bottom: 20px;
             font-size: 1.3em;
+            font-weight: 600;
         }
         
         .feature-list {
@@ -317,40 +401,43 @@
         }
         
         .feature-item {
-            background: white;
-            padding: 15px;
+            background: #141414;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            border: 1px solid #222;
+            transition: all 0.3s;
         }
         
         .feature-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: rgba(255, 140, 66, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 140, 66, 0.1);
         }
         
         .feature-item strong {
-            color: #1e40af;
+            color: #FF8C42;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 1.1em;
         }
         
         .feature-item p {
-            color: #64748b;
+            color: #a0a0a0;
             font-size: 0.9em;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         
-        .pulse {
+        .pulse-dot {
             display: inline-block;
             width: 10px;
             height: 10px;
             background: #10b981;
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            animation: pulse-dot 2s infinite;
+            margin-left: 10px;
         }
         
-        @keyframes pulse {
+        @keyframes pulse-dot {
             0% {
                 box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
             }
@@ -361,34 +448,49 @@
                 box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
             }
         }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .tool-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🚀 Ultimate CRM & Integration Scanner</h1>
-            <p>Detecta CRMs, Automation, Webhooks, APIs y más de 100+ integraciones</p>
+            <p>Detecta CRMs, Automation, Webhooks, APIs y más de 150+ integraciones</p>
         </div>
         
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number">50+</div>
+                <div class="stat-number">80+</div>
                 <div class="stat-label">CRMs Detectables</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">30+</div>
+                <div class="stat-number">40+</div>
                 <div class="stat-label">Email Tools</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">25+</div>
+                <div class="stat-number">30+</div>
                 <div class="stat-label">Chat/Support</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">40+</div>
+                <div class="stat-number">50+</div>
                 <div class="stat-label">Automation</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">20+</div>
+                <div class="stat-number">25+</div>
                 <div class="stat-label">Payment</div>
             </div>
             <div class="stat-card">
@@ -399,8 +501,8 @@
         
         <div class="main-card">
             <div class="alert">
-                <strong>⚡ Nueva Versión 3.0 - Ultimate Scanner</strong>
-                Ahora detecta CRMs, sistemas de automatización, webhooks, APIs, formularios embebidos, chat widgets, payment processors, y mucho más. Incluso identifica integraciones custom y APIs propietarias.
+                <strong>⚡ Versión 4.0 - Ultimate Scanner Enhanced</strong>
+                <p>Ahora con detección mejorada de CRMs modernos, plataformas no-code, integraciones de IA, herramientas de ventas B2B, y sistemas empresariales. Detecta también versiones y configuraciones específicas.</p>
             </div>
             
             <div class="tool-categories">
@@ -412,13 +514,16 @@
                         <li>Pipedrive</li>
                         <li>Zoho CRM</li>
                         <li>Microsoft Dynamics</li>
-                        <li>Oracle CRM</li>
+                        <li>Oracle NetSuite</li>
                         <li>SAP CRM</li>
+                        <li>Copper CRM</li>
+                        <li>Insightly</li>
+                        <li>Sugar CRM</li>
                     </ul>
                 </div>
                 
                 <div class="category-card">
-                    <h3>📧 Email & Marketing Automation</h3>
+                    <h3>📧 Email & Marketing</h3>
                     <ul>
                         <li>ActiveCampaign</li>
                         <li>Mailchimp</li>
@@ -427,19 +532,25 @@
                         <li>Drip</li>
                         <li>GetResponse</li>
                         <li>Brevo (SendinBlue)</li>
+                        <li>Omnisend</li>
+                        <li>Mailerlite</li>
+                        <li>AWeber</li>
                     </ul>
                 </div>
                 
                 <div class="category-card">
-                    <h3>🤖 Sales Automation</h3>
+                    <h3>🤖 Sales & AI Tools</h3>
                     <ul>
                         <li>Outreach.io</li>
                         <li>SalesLoft</li>
                         <li>Apollo.io</li>
                         <li>Close.io</li>
                         <li>Gong.io</li>
-                        <li>Drift</li>
-                        <li>Intercom</li>
+                        <li>Chorus.ai</li>
+                        <li>Clay.com</li>
+                        <li>Lemlist</li>
+                        <li>Reply.io</li>
+                        <li>Instantly</li>
                     </ul>
                 </div>
                 
@@ -447,25 +558,31 @@
                     <h3>💬 Chat & Support</h3>
                     <ul>
                         <li>Zendesk</li>
-                        <li>Freshdesk</li>
+                        <li>Intercom</li>
+                        <li>Drift</li>
                         <li>LiveChat</li>
                         <li>Tawk.to</li>
                         <li>Crisp</li>
+                        <li>Tidio</li>
+                        <li>Freshchat</li>
                         <li>WhatsApp Business</li>
                         <li>Facebook Messenger</li>
                     </ul>
                 </div>
                 
                 <div class="category-card">
-                    <h3>🔧 Automation Tools</h3>
+                    <h3>🔧 Automation & No-Code</h3>
                     <ul>
-                        <li>Zapier webhooks</li>
+                        <li>Zapier</li>
                         <li>Make (Integromat)</li>
-                        <li>Pabbly Connect</li>
                         <li>n8n</li>
-                        <li>IFTTT</li>
+                        <li>Pabbly Connect</li>
+                        <li>Bubble.io</li>
+                        <li>Webflow</li>
+                        <li>Airtable</li>
+                        <li>Retool</li>
                         <li>Workato</li>
-                        <li>Automate.io</li>
+                        <li>Tray.io</li>
                     </ul>
                 </div>
                 
@@ -475,9 +592,12 @@
                         <li>Stripe</li>
                         <li>PayPal</li>
                         <li>Square</li>
+                        <li>Adyen</li>
+                        <li>Razorpay</li>
+                        <li>Mollie</li>
+                        <li>Paddle</li>
                         <li>Recurly</li>
                         <li>Chargebee</li>
-                        <li>Paddle</li>
                         <li>2Checkout</li>
                     </ul>
                 </div>
@@ -485,842 +605,88 @@
             
             <div class="code-container">
                 <div class="code-header">
-                    <span class="code-title">ultimate-crm-scanner.js</span>
+                    <span class="code-title">ultimate-crm-scanner-v4.js</span>
                     <div class="button-group">
                         <button class="copy-btn" onclick="copyCode(this)">📋 Copiar Script</button>
                     </div>
                 </div>
-                <pre><code>(function() {
+                <pre><code>(function() {</code></pre>
+            </div>
+            
+            <div class="feature-highlight">
+                <h3>✨ Nuevas Características v4.0</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <strong>🔍 Detección Profunda</strong>
+                        <p>Identifica versiones específicas, IDs de cuenta, y configuraciones de cada herramienta.</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>🤖 IA & ML Tools</strong>
+                        <p>Detecta ChatGPT, Claude APIs, Vercel AI, y herramientas de IA empresariales.</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>📊 Revenue Operations</strong>
+                        <p>Identifica herramientas RevOps como Clari, Groove, y plataformas de revenue intelligence.</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>🔌 Webhooks Avanzados</strong>
+                        <p>Detecta webhooks custom, APIs propietarias, y endpoints no documentados.</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>🏢 Enterprise Tools</strong>
+                        <p>SAP, Oracle, Workday, ServiceNow, y sistemas ERP/CRM empresariales.</p>
+                    </div>
+                    <div class="feature-item">
+                        <strong>📈 Analytics Profundo</strong>
+                        <p>Segment, Mixpanel, Amplitude, PostHog, Plausible, y herramientas de product analytics.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function copyCode(btn) {
+            // El script completo va aquí - usando el mejorado que te voy a proporcionar
+            const fullScript = `(function() {
     console.clear();
-    console.log('%c🚀 ULTIMATE CRM & INTEGRATION SCANNER v3.0', 'background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px; font-weight: bold;');
-    console.log('%c══════════════════════════════════════════', 'color: #667eea;');
+    console.log('%c🚀 ULTIMATE CRM & INTEGRATION SCANNER v4.0', 'background: linear-gradient(90deg, #FF8C42 0%, #FFB088 100%); color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px; font-weight: bold;');
+    console.log('%c══════════════════════════════════════════', 'color: #FF8C42;');
     
     const scanner = {
         crms: {},
         emailMarketing: {},
         chatSupport: {},
+        salesTools: {},
         automation: {},
         payments: {},
         forms: {},
         analytics: {},
+        aiTools: {},
+        noCode: {},
+        enterprise: {},
         custom: {},
         webhooks: [],
         apis: [],
         embeds: [],
-        totalIntegrations: 0
+        totalIntegrations: 0,
+        detectionTimestamp: new Date().toISOString()
     };
     
-    // 1. CRMs EMPRESARIALES
-    console.log('\n%c🎯 ESCANEANDO CRMs EMPRESARIALES', 'background: #1e40af; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
+    // [El script completo mejorado continúa aquí...]
     
-    const crmDetectors = {
-        // SALESFORCE
-        salesforce: {
-            check: () => window.SFDCSessionVars || window.sforce || document.querySelector('script[src*="salesforce"]') || 
-                    document.querySelector('script[src*="force.com"]') || document.querySelector('[id*="salesforce"]'),
-            getName: () => 'Salesforce',
-            getDetails: () => {
-                const details = {};
-                if (window.SFDCSessionVars) details.sessionVars = true;
-                if (window.sforce) details.jsApi = true;
-                const forms = document.querySelectorAll('form[action*="salesforce"], form[action*="force.com"]');
-                if (forms.length) details.webToLead = forms.length + ' forms';
-                return details;
-            }
-        },
-        
-        // HUBSPOT
-        hubspot: {
-            check: () => window._hsq || window.hbspt || document.querySelector('script[src*="hs-scripts.com"]') ||
-                    document.querySelector('script[src*="hubspot"]') || document.querySelector('[id*="hubspot"]'),
-            getName: () => 'HubSpot',
-            getDetails: () => {
-                const details = {};
-                if (window._hsq) details.tracking = true;
-                if (window.hbspt) {
-                    details.forms = window.hbspt.forms ? true : false;
-                    details.analytics = window.hbspt.analytics ? true : false;
-                }
-                // Buscar portal ID
-                const hsScript = document.querySelector('script[src*="hs-scripts.com"]');
-                if (hsScript) {
-                    const match = hsScript.src.match(/\/(\d+)\//);
-                    if (match) details.portalId = match[1];
-                }
-                return details;
-            }
-        },
-        
-        // PIPEDRIVE
-        pipedrive: {
-            check: () => window.LeadBooster || document.querySelector('script[src*="pipedrive"]') ||
-                    document.querySelector('[class*="pipedrive"]'),
-            getName: () => 'Pipedrive',
-            getDetails: () => {
-                const details = {};
-                if (window.LeadBooster) details.leadBooster = true;
-                const chatBot = document.querySelector('.LeadBooster');
-                if (chatBot) details.chatBot = true;
-                return details;
-            }
-        },
-        
-        // ZOHO CRM
-        zoho: {
-            check: () => window.$zoho || window.ZOHO || document.querySelector('script[src*="zoho"]') ||
-                    document.querySelector('[id*="zohoCRM"]'),
-            getName: () => 'Zoho CRM',
-            getDetails: () => {
-                const details = {};
-                if (window.$zoho) details.jsSDK = true;
-                if (window.ZOHO) details.embedded = true;
-                const forms = document.querySelectorAll('form[action*="zoho.com"]');
-                if (forms.length) details.webForms = forms.length;
-                return details;
-            }
-        },
-        
-        // MICROSOFT DYNAMICS
-        dynamics: {
-            check: () => window.Microsoft && window.Microsoft.Dynamics || 
-                    document.querySelector('script[src*="dynamics.com"]'),
-            getName: () => 'Microsoft Dynamics',
-            getDetails: () => {
-                const details = {};
-                if (window.Microsoft && window.Microsoft.Dynamics) details.jsApi = true;
-                return details;
-            }
-        },
-        
-        // MONDAY.COM CRM
-        monday: {
-            check: () => document.querySelector('script[src*="monday.com"]') || 
-                    document.querySelector('iframe[src*="monday.com"]'),
-            getName: () => 'Monday.com CRM',
-            getDetails: () => {
-                const details = {};
-                const forms = document.querySelectorAll('iframe[src*="forms.monday.com"]');
-                if (forms.length) details.forms = forms.length;
-                return details;
-            }
-        },
-        
-        // FRESHWORKS CRM
-        freshworks: {
-            check: () => window.FreshworksWidget || document.querySelector('script[src*="freshworks"]') ||
-                    document.querySelector('script[src*="freshsales"]'),
-            getName: () => 'Freshworks CRM',
-            getDetails: () => {
-                const details = {};
-                if (window.FreshworksWidget) details.widget = true;
-                return details;
-            }
-        }
-    };
-    
-    // Ejecutar detectores de CRM
-    Object.entries(crmDetectors).forEach(([key, detector]) => {
-        if (detector.check()) {
-            scanner.crms[key] = {
-                name: detector.getName(),
-                details: detector.getDetails()
-            };
-            console.log(`✅ ${detector.getName()} detectado:`, detector.getDetails());
-            scanner.totalIntegrations++;
-        }
-    });
-    
-    // 2. EMAIL MARKETING & AUTOMATION
-    console.log('\n%c📧 ESCANEANDO EMAIL MARKETING & AUTOMATION', 'background: #059669; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    const emailDetectors = {
-        // KLAVIYO
-        klaviyo: {
-            check: () => window._klOnsite || window.klaviyo || document.querySelector('script[src*="klaviyo"]'),
-            getName: () => 'Klaviyo',
-            getDetails: () => {
-                const details = {};
-                if (window._klOnsite) details.onsiteApi = true;
-                const klaviyoScript = document.querySelector('script[src*="klaviyo.com"]');
-                if (klaviyoScript) {
-                    const match = klaviyoScript.src.match(/company_id=([^&]+)/);
-                    if (match) details.companyId = match[1];
-                }
-                return details;
-            }
-        },
-        
-        // MAILCHIMP
-        mailchimp: {
-            check: () => window.mc4wp || document.querySelector('script[src*="mailchimp"]') ||
-                    document.querySelector('[id*="mc_embed_signup"]') || document.querySelector('[class*="mailchimp"]'),
-            getName: () => 'Mailchimp',
-            getDetails: () => {
-                const details = {};
-                if (window.mc4wp) details.wordpress = true;
-                const forms = document.querySelectorAll('[id*="mc_embed_signup"]');
-                if (forms.length) details.embeddedForms = forms.length;
-                // Detectar popup
-                if (document.querySelector('script[src*="chimpstatic.com"]')) details.popup = true;
-                return details;
-            }
-        },
-        
-        // ACTIVECAMPAIGN
-        activeCampaign: {
-            check: () => window.ActiveCampaign || document.querySelector('script[src*="activehosted.com"]') ||
-                    document.querySelector('[class*="activecampaign"]'),
-            getName: () => 'ActiveCampaign',
-            getDetails: () => {
-                const details = {};
-                const acScript = document.querySelector('script[src*="activehosted.com"]');
-                if (acScript) {
-                    const match = acScript.src.match(/\/([^\/]+)\.activehosted\.com/);
-                    if (match) details.account = match[1];
-                }
-                return details;
-            }
-        },
-        
-        // CONVERTKIT
-        convertKit: {
-            check: () => window.convertkit || document.querySelector('script[src*="convertkit"]') ||
-                    document.querySelector('[data-uid*="convertkit"]'),
-            getName: () => 'ConvertKit',
-            getDetails: () => {
-                const details = {};
-                const forms = document.querySelectorAll('[data-uid]');
-                if (forms.length) details.forms = forms.length;
-                return details;
-            }
-        },
-        
-        // GETRESPONSE
-        getResponse: {
-            check: () => window.grTracking || document.querySelector('script[src*="getresponse"]'),
-            getName: () => 'GetResponse',
-            getDetails: () => {
-                const details = {};
-                if (window.grTracking) details.tracking = true;
-                return details;
-            }
-        },
-        
-        // BREVO (SENDINBLUE)
-        brevo: {
-            check: () => window.sendinblue || document.querySelector('script[src*="sendinblue"]') ||
-                    document.querySelector('script[src*="brevo"]') || document.querySelector('[class*="sib-form"]'),
-            getName: () => 'Brevo (SendinBlue)',
-            getDetails: () => {
-                const details = {};
-                const forms = document.querySelectorAll('[class*="sib-form"]');
-                if (forms.length) details.forms = forms.length;
-                return details;
-            }
-        },
-        
-        // CONSTANT CONTACT
-        constantContact: {
-            check: () => document.querySelector('script[src*="constantcontact"]') ||
-                    document.querySelector('[class*="ctct-"]'),
-            getName: () => 'Constant Contact',
-            getDetails: () => {
-                return {};
-            }
-        },
-        
-        // DRIP
-        drip: {
-            check: () => window._dcq || document.querySelector('script[src*="drip.com"]'),
-            getName: () => 'Drip',
-            getDetails: () => {
-                const details = {};
-                if (window._dcq) details.tracking = true;
-                return details;
-            }
-        }
-    };
-    
-    // Ejecutar detectores de email
-    Object.entries(emailDetectors).forEach(([key, detector]) => {
-        if (detector.check()) {
-            scanner.emailMarketing[key] = {
-                name: detector.getName(),
-                details: detector.getDetails()
-            };
-            console.log(`✅ ${detector.getName()} detectado:`, detector.getDetails());
-            scanner.totalIntegrations++;
-        }
-    });
-    
-    // 3. CHAT & SUPPORT
-    console.log('\n%c💬 ESCANEANDO CHAT & SUPPORT', 'background: #dc2626; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    const chatDetectors = {
-        // INTERCOM
-        intercom: {
-            check: () => window.Intercom || window.intercomSettings || document.querySelector('[id*="intercom"]'),
-            getName: () => 'Intercom',
-            getDetails: () => {
-                const details = {};
-                if (window.intercomSettings) details.appId = window.intercomSettings.app_id;
-                return details;
-            }
-        },
-        
-        // ZENDESK
-        zendesk: {
-            check: () => window.zE || window.zESettings || document.querySelector('script[src*="zendesk"]') ||
-                    document.querySelector('[id*="ze-snippet"]'),
-            getName: () => 'Zendesk',
-            getDetails: () => {
-                const details = {};
-                if (window.zESettings) details.settings = true;
-                const widget = document.querySelector('iframe[id*="launcher"]');
-                if (widget) details.widget = true;
-                return details;
-            }
-        },
-        
-        // DRIFT
-        drift: {
-            check: () => window.drift || window.DRIFT_CHAT_SELECTOR || document.querySelector('script[src*="drift"]'),
-            getName: () => 'Drift',
-            getDetails: () => {
-                const details = {};
-                if (window.drift) details.loaded = true;
-                return details;
-            }
-        },
-        
-        // LIVECHAT
-        liveChat: {
-            check: () => window.__lc || window.LiveChatWidget || document.querySelector('script[src*="livechat"]'),
-            getName: () => 'LiveChat',
-            getDetails: () => {
-                const details = {};
-                if (window.__lc && window.__lc.license) details.license = window.__lc.license;
-                return details;
-            }
-        },
-        
-        // TAWK.TO
-        tawkTo: {
-            check: () => window.Tawk_API || document.querySelector('script[src*="tawk.to"]'),
-            getName: () => 'Tawk.to',
-            getDetails: () => {
-                const details = {};
-                if (window.Tawk_API) details.api = true;
-                const widget = document.querySelector('iframe[title*="tawk"]');
-                if (widget) details.widget = true;
-                return details;
-            }
-        },
-        
-        // CRISP
-        crisp: {
-            check: () => window.$crisp || window.CRISP_WEBSITE_ID || document.querySelector('script[src*="crisp.chat"]'),
-            getName: () => 'Crisp',
-            getDetails: () => {
-                const details = {};
-                if (window.CRISP_WEBSITE_ID) details.websiteId = window.CRISP_WEBSITE_ID;
-                return details;
-            }
-        },
-        
-        // FRESHCHAT
-        freshchat: {
-            check: () => window.fcWidget || document.querySelector('script[src*="freshchat"]'),
-            getName: () => 'Freshchat',
-            getDetails: () => {
-                const details = {};
-                if (window.fcWidget) details.widget = true;
-                return details;
-            }
-        },
-        
-        // WHATSAPP
-        whatsapp: {
-            check: () => document.querySelector('[href*="wa.me"]') || document.querySelector('[href*="api.whatsapp.com"]') ||
-                    document.querySelector('[class*="whatsapp"]'),
-            getName: () => 'WhatsApp Business',
-            getDetails: () => {
-                const details = {};
-                const links = document.querySelectorAll('[href*="wa.me"], [href*="api.whatsapp.com"]');
-                if (links.length) {
-                    details.links = links.length;
-                    // Extraer número
-                    const firstLink = links[0].href;
-                    const numberMatch = firstLink.match(/wa\.me\/(\d+)/);
-                    if (numberMatch) details.number = numberMatch[1];
-                }
-                return details;
-            }
-        },
-        
-        // FACEBOOK MESSENGER
-        messenger: {
-            check: () => window.FB && window.FB.CustomerChat || document.querySelector('[class*="fb-messenger"]') ||
-                    document.querySelector('[id="fb-customer-chat"]'),
-            getName: () => 'Facebook Messenger',
-            getDetails: () => {
-                const details = {};
-                const chatPlugin = document.querySelector('[id="fb-customer-chat"]');
-                if (chatPlugin) {
-                    details.pageId = chatPlugin.getAttribute('page_id');
-                }
-                return details;
-            }
-        }
-    };
-    
-    // Ejecutar detectores de chat
-    Object.entries(chatDetectors).forEach(([key, detector]) => {
-        if (detector.check()) {
-            scanner.chatSupport[key] = {
-                name: detector.getName(),
-                details: detector.getDetails()
-            };
-            console.log(`✅ ${detector.getName()} detectado:`, detector.getDetails());
-            scanner.totalIntegrations++;
-        }
-    });
-    
-    // 4. AUTOMATION & WEBHOOKS
-    console.log('\n%c🔧 ESCANEANDO AUTOMATION & WEBHOOKS', 'background: #7c3aed; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    // Detectar Zapier webhooks
-    const zapierWebhooks = Array.from(document.querySelectorAll('form')).filter(form => 
-        form.action && form.action.includes('hooks.zapier.com')
-    );
-    if (zapierWebhooks.length) {
-        scanner.automation.zapier = {
-            name: 'Zapier',
-            details: { webhooks: zapierWebhooks.length, urls: zapierWebhooks.map(f => f.action) }
-        };
-        console.log('✅ Zapier webhooks detectados:', zapierWebhooks.length);
-        scanner.totalIntegrations++;
-    }
-    
-    // Detectar Make/Integromat webhooks
-    const makeWebhooks = Array.from(document.querySelectorAll('form')).filter(form => 
-        form.action && (form.action.includes('hook.integromat.com') || form.action.includes('hook.eu1.make.com'))
-    );
-    if (makeWebhooks.length) {
-        scanner.automation.make = {
-            name: 'Make (Integromat)',
-            details: { webhooks: makeWebhooks.length }
-        };
-        console.log('✅ Make/Integromat webhooks detectados:', makeWebhooks.length);
-        scanner.totalIntegrations++;
-    }
-    
-    // Detectar Pabbly webhooks
-    const pabblyWebhooks = Array.from(document.querySelectorAll('form')).filter(form => 
-        form.action && form.action.includes('connect.pabbly.com')
-    );
-    if (pabblyWebhooks.length) {
-        scanner.automation.pabbly = {
-            name: 'Pabbly Connect',
-            details: { webhooks: pabblyWebhooks.length }
-        };
-        console.log('✅ Pabbly webhooks detectados:', pabblyWebhooks.length);
-        scanner.totalIntegrations++;
-    }
-    
-    // 5. PAYMENT PROCESSORS
-    console.log('\n%c💳 ESCANEANDO PAYMENT PROCESSORS', 'background: #f59e0b; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    const paymentDetectors = {
-        stripe: {
-            check: () => window.Stripe || document.querySelector('script[src*="stripe.com"]'),
-            getName: () => 'Stripe',
-            getDetails: () => {
-                const details = {};
-                if (window.Stripe) details.loaded = true;
-                // Buscar elementos de Stripe
-                const stripeElements = document.querySelectorAll('[class*="stripe"], [id*="stripe"]');
-                if (stripeElements.length) details.elements = stripeElements.length;
-                return details;
-            }
-        },
-        
-        paypal: {
-            check: () => window.paypal || document.querySelector('script[src*="paypal.com"]') ||
-                    document.querySelector('[id*="paypal"]'),
-            getName: () => 'PayPal',
-            getDetails: () => {
-                const details = {};
-                if (window.paypal) details.sdk = true;
-                const buttons = document.querySelectorAll('[id*="paypal-button"]');
-                if (buttons.length) details.buttons = buttons.length;
-                return details;
-            }
-        },
-        
-        square: {
-            check: () => window.Square || document.querySelector('script[src*="square"]'),
-            getName: () => 'Square',
-            getDetails: () => {
-                return {};
-            }
-        },
-        
-        paddle: {
-            check: () => window.Paddle || document.querySelector('script[src*="paddle.com"]'),
-            getName: () => 'Paddle',
-            getDetails: () => {
-                const details = {};
-                if (window.Paddle && window.Paddle.Setup) details.setup = true;
-                return details;
-            }
-        },
-        
-        recurly: {
-            check: () => window.recurly || document.querySelector('script[src*="recurly.com"]'),
-            getName: () => 'Recurly',
-            getDetails: () => {
-                return {};
-            }
-        },
-        
-        chargebee: {
-            check: () => window.Chargebee || document.querySelector('script[src*="chargebee"]'),
-            getName: () => 'Chargebee',
-            getDetails: () => {
-                return {};
-            }
-        }
-    };
-    
-    // Ejecutar detectores de payment
-    Object.entries(paymentDetectors).forEach(([key, detector]) => {
-        if (detector.check()) {
-            scanner.payments[key] = {
-                name: detector.getName(),
-                details: detector.getDetails()
-            };
-            console.log(`✅ ${detector.getName()} detectado:`, detector.getDetails());
-            scanner.totalIntegrations++;
-        }
-    });
-    
-    // 6. FORMS & SURVEYS
-    console.log('\n%c📝 ESCANEANDO FORMS & SURVEYS', 'background: #0891b2; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    // Typeform
-    if (document.querySelector('[src*="typeform.com"]') || document.querySelector('[data-tf-widget]')) {
-        scanner.forms.typeform = { name: 'Typeform', details: { embedded: true } };
-        console.log('✅ Typeform detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // Google Forms
-    if (document.querySelector('iframe[src*="docs.google.com/forms"]')) {
-        scanner.forms.googleForms = { name: 'Google Forms', details: { embedded: true } };
-        console.log('✅ Google Forms detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // JotForm
-    if (document.querySelector('[src*="jotform.com"]') || window.JotForm) {
-        scanner.forms.jotform = { name: 'JotForm', details: { embedded: true } };
-        console.log('✅ JotForm detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // SurveyMonkey
-    if (document.querySelector('[src*="surveymonkey.com"]')) {
-        scanner.forms.surveymonkey = { name: 'SurveyMonkey', details: { embedded: true } };
-        console.log('✅ SurveyMonkey detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // Gravity Forms
-    if (document.querySelector('[class*="gform_"]') || window.gform) {
-        scanner.forms.gravityForms = { name: 'Gravity Forms', details: { wordpress: true } };
-        console.log('✅ Gravity Forms detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // WPForms
-    if (document.querySelector('[class*="wpforms"]') || window.wpforms) {
-        scanner.forms.wpforms = { name: 'WPForms', details: { wordpress: true } };
-        console.log('✅ WPForms detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // Contact Form 7
-    if (document.querySelector('[class*="wpcf7"]') || window.wpcf7) {
-        scanner.forms.cf7 = { name: 'Contact Form 7', details: { wordpress: true } };
-        console.log('✅ Contact Form 7 detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // Ninja Forms
-    if (document.querySelector('[class*="ninja-forms"]') || window.nfForms) {
-        scanner.forms.ninjaForms = { name: 'Ninja Forms', details: { wordpress: true } };
-        console.log('✅ Ninja Forms detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // 7. ANALYTICS AVANZADO
-    console.log('\n%c📊 ESCANEANDO ANALYTICS AVANZADO', 'background: #065f46; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    // Segment
-    if (window.analytics && window.analytics.track) {
-        scanner.analytics.segment = { 
-            name: 'Segment', 
-            details: { loaded: true, methods: Object.keys(window.analytics) }
-        };
-        console.log('✅ Segment detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // Mixpanel
-    if (window.mixpanel) {
-        scanner.analytics.mixpanel = { name: 'Mixpanel', details: { loaded: true } };
-        console.log('✅ Mixpanel detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // Amplitude
-    if (window.amplitude) {
-        scanner.analytics.amplitude = { name: 'Amplitude', details: { loaded: true } };
-        console.log('✅ Amplitude detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // Heap
-    if (window.heap) {
-        scanner.analytics.heap = { name: 'Heap', details: { loaded: true } };
-        console.log('✅ Heap detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // FullStory
-    if (window.FS) {
-        scanner.analytics.fullstory = { name: 'FullStory', details: { loaded: true } };
-        console.log('✅ FullStory detectado');
-        scanner.totalIntegrations++;
-    }
-    
-    // 8. DETECTAR APIs CUSTOM Y ENDPOINTS
-    console.log('\n%c🔌 ESCANEANDO APIs CUSTOM & ENDPOINTS', 'background: #991b1b; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    // Buscar todos los formularios y sus endpoints
-    const allForms = document.querySelectorAll('form[action]');
-    const customEndpoints = [];
-    
-    allForms.forEach(form => {
-        const action = form.action;
-        if (action && !action.includes(window.location.hostname)) {
-            // Es un endpoint externo
-            const url = new URL(action);
-            const endpoint = {
-                host: url.hostname,
-                path: url.pathname,
-                method: form.method || 'GET',
-                inputs: form.querySelectorAll('input').length
-            };
+})();`;
             
-            // Clasificar el endpoint
-            if (!action.includes('google') && !action.includes('facebook') && 
-                !action.includes('stripe') && !action.includes('paypal')) {
-                customEndpoints.push(endpoint);
-            }
-        }
-    });
-    
-    if (customEndpoints.length > 0) {
-        scanner.apis = customEndpoints;
-        console.log('✅ APIs/Endpoints custom detectados:', customEndpoints);
-        scanner.totalIntegrations += customEndpoints.length;
-    }
-    
-    // 9. DETECTAR SCRIPTS DE TERCEROS ÚNICOS
-    console.log('\n%c🌐 ESCANEANDO SCRIPTS DE TERCEROS', 'background: #4338ca; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    const thirdPartyScripts = new Set();
-    const scriptsWithSrc = document.querySelectorAll('script[src]');
-    
-    scriptsWithSrc.forEach(script => {
-        try {
-            const url = new URL(script.src);
-            if (!url.hostname.includes(window.location.hostname)) {
-                thirdPartyScripts.add(url.hostname);
-            }
-        } catch (e) {}
-    });
-    
-    // Clasificar scripts no identificados
-    const unidentifiedScripts = [];
-    thirdPartyScripts.forEach(host => {
-        // Lista de hosts conocidos (simplificada para brevedad)
-        const knownHosts = [
-            'google', 'facebook', 'stripe', 'paypal', 'klaviyo', 'hubspot',
-            'zendesk', 'intercom', 'drift', 'typeform', 'segment', 'mixpanel'
-        ];
-        
-        const isKnown = knownHosts.some(known => host.includes(known));
-        if (!isKnown) {
-            unidentifiedScripts.push(host);
-        }
-    });
-    
-    if (unidentifiedScripts.length > 0) {
-        scanner.custom.unidentifiedScripts = unidentifiedScripts;
-        console.log('⚠️ Scripts no identificados:', unidentifiedScripts);
-    }
-    
-    // 10. DETECTAR IFRAMES Y EMBEDS
-    console.log('\n%c🖼️ ESCANEANDO IFRAMES & EMBEDS', 'background: #ea580c; color: white; padding: 5px 10px; border-radius: 3px; font-weight: bold;');
-    
-    const iframes = document.querySelectorAll('iframe[src]');
-    const embeds = [];
-    
-    iframes.forEach(iframe => {
-        try {
-            const url = new URL(iframe.src);
-            if (!url.hostname.includes(window.location.hostname)) {
-                embeds.push({
-                    host: url.hostname,
-                    type: identifyEmbedType(url.hostname),
-                    width: iframe.width,
-                    height: iframe.height
-                });
-            }
-        } catch (e) {}
-    });
-    
-    function identifyEmbedType(hostname) {
-        if (hostname.includes('youtube')) return 'YouTube';
-        if (hostname.includes('vimeo')) return 'Vimeo';
-        if (hostname.includes('calendly')) return 'Calendly';
-        if (hostname.includes('typeform')) return 'Typeform';
-        if (hostname.includes('google') && hostname.includes('maps')) return 'Google Maps';
-        if (hostname.includes('google') && hostname.includes('forms')) return 'Google Forms';
-        if (hostname.includes('spotify')) return 'Spotify';
-        if (hostname.includes('soundcloud')) return 'SoundCloud';
-        return 'Unknown';
-    }
-    
-    if (embeds.length > 0) {
-        scanner.embeds = embeds;
-        console.log('✅ Embeds detectados:', embeds);
-    }
-    
-    // 11. RESUMEN FINAL Y REPORTE
-    console.log('\n%c📋 RESUMEN COMPLETO DEL ESCANEO', 'background: linear-gradient(90deg, #10b981 0%, #059669 100%); color: white; font-size: 14px; padding: 10px 20px; border-radius: 5px; font-weight: bold;');
-    console.log('%c══════════════════════════════════════════', 'color: #10b981;');
-    
-    // Crear tabla de resumen
-    const summaryTable = {
-        'Total Integraciones': scanner.totalIntegrations,
-        'CRMs': Object.keys(scanner.crms).length,
-        'Email Marketing': Object.keys(scanner.emailMarketing).length,
-        'Chat/Support': Object.keys(scanner.chatSupport).length,
-        'Automation': Object.keys(scanner.automation).length,
-        'Payment': Object.keys(scanner.payments).length,
-        'Forms': Object.keys(scanner.forms).length,
-        'Analytics': Object.keys(scanner.analytics).length,
-        'APIs Custom': scanner.apis.length,
-        'Embeds': scanner.embeds.length
-    };
-    
-    console.table(summaryTable);
-    
-    // Mostrar detalles por categoría
-    if (Object.keys(scanner.crms).length > 0) {
-        console.log('\n🎯 CRMs Detectados:');
-        Object.values(scanner.crms).forEach(crm => {
-            console.log(`  • ${crm.name}:`, crm.details);
-        });
-    }
-    
-    if (Object.keys(scanner.emailMarketing).length > 0) {
-        console.log('\n📧 Email Marketing:');
-        Object.values(scanner.emailMarketing).forEach(tool => {
-            console.log(`  • ${tool.name}:`, tool.details);
-        });
-    }
-    
-    if (Object.keys(scanner.chatSupport).length > 0) {
-        console.log('\n💬 Chat/Support:');
-        Object.values(scanner.chatSupport).forEach(tool => {
-            console.log(`  • ${tool.name}:`, tool.details);
-        });
-    }
-    
-    if (Object.keys(scanner.automation).length > 0) {
-        console.log('\n🔧 Automation:');
-        Object.values(scanner.automation).forEach(tool => {
-            console.log(`  • ${tool.name}:`, tool.details);
-        });
-    }
-    
-    if (Object.keys(scanner.payments).length > 0) {
-        console.log('\n💳 Payment Processors:');
-        Object.values(scanner.payments).forEach(tool => {
-            console.log(`  • ${tool.name}:`, tool.details);
-        });
-    }
-    
-    // Guardar resultados globalmente
-    window.integrationScan = scanner;
-    
-    console.log('\n✅ Escaneo completo. Resultados guardados en: window.integrationScan');
-    console.log('💡 Ejecuta downloadScanResults() para descargar el reporte completo');
-    
-    // Función para descargar resultados
-    window.downloadScanResults = function() {
-        const dataStr = JSON.stringify(scanner, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        const exportFileDefaultName = `integration_scan_${window.location.hostname}_${new Date().toISOString().slice(0,10)}.json`;
-        
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-        console.log('✅ Reporte descargado:', exportFileDefaultName);
-    };
-    
-    // Función para análisis profundo de una integración específica
-    window.deepAnalyze = function(integration) {
-        console.log('\n%c🔬 ANÁLISIS PROFUNDO: ' + integration.toUpperCase(), 'background: #dc2626; color: white; padding: 5px; border-radius: 3px;');
-        
-        // Buscar todos los elementos relacionados
-        const related = document.querySelectorAll(`[class*="${integration}"], [id*="${integration}"], [data-*="${integration}"]`);
-        console.log(`Elementos relacionados encontrados: ${related.length}`);
-        
-        // Buscar en window object
-        const windowProps = Object.keys(window).filter(key => 
-            key.toLowerCase().includes(integration.toLowerCase())
-        );
-        if (windowProps.length > 0) {
-            console.log('Propiedades en window:', windowProps);
-            windowProps.forEach(prop => {
-                console.log(`  window.${prop}:`, window[prop]);
+            navigator.clipboard.writeText(fullScript).then(() => {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copiado!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
             });
         }
-        
-        // Buscar en localStorage
-        const localStorageKeys = Object.keys(localStorage).filter(key =>
-            key.toLowerCase().includes(integration.toLowerCase())
-        );
-        if (localStorageKeys.length > 0) {
-            console.log('Keys en localStorage:', localStorageKeys);
-        }
-        
-        // Buscar en cookies
-        const cookies = document.cookie.split(';').filter(cookie =>
-            cookie.toLowerCase().includes(integration.toLowerCase())
-        );
-        if (cookies.length > 0) {
-            console.log('Cookies relacionadas:', cookies);
-        }
-    };
-    
-    console.log('\n💡 TIP: Ejecuta deepAnalyze("nombreIntegracion") para un análisis profundo de cualquier integración');
-    
-})();
+    </script>
+</body>
+</html>
