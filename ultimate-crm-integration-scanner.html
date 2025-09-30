@@ -668,25 +668,175 @@
         totalIntegrations: 0
     };
     
-    // DETECTORES DE CRM
+    // 1. DETECTAR CRMs
     console.log('\n%c🎯 ESCANEANDO CRMs', 'background: #1e40af; color: white; padding: 5px; border-radius: 3px;');
     
     // HubSpot
-    if (window._hsq || window.hbspt) {
+    if (window._hsq || window.hbspt || document.querySelector('script[src*="hs-scripts.com"]')) {
         scanner.crms.hubspot = true;
         console.log('✅ HubSpot detectado');
+        scanner.totalIntegrations++;
     }
     
     // Salesforce
-    if (window.SFDCSessionVars || window.sforce) {
+    if (window.SFDCSessionVars || window.sforce || document.querySelector('script[src*="salesforce"]')) {
         scanner.crms.salesforce = true;
         console.log('✅ Salesforce detectado');
+        scanner.totalIntegrations++;
     }
     
-    // Más detectores aquí...
+    // Pipedrive
+    if (window.LeadBooster || document.querySelector('script[src*="pipedrive"]')) {
+        scanner.crms.pipedrive = true;
+        console.log('✅ Pipedrive detectado');
+        scanner.totalIntegrations++;
+    }
     
+    // Zoho
+    if (window.$zoho || window.ZOHO || document.querySelector('script[src*="zoho"]')) {
+        scanner.crms.zoho = true;
+        console.log('✅ Zoho CRM detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // 2. EMAIL MARKETING
+    console.log('\n%c📧 ESCANEANDO EMAIL MARKETING', 'background: #059669; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Mailchimp
+    if (window.mc4wp || document.querySelector('[id*="mc_embed_signup"]')) {
+        scanner.emailMarketing.mailchimp = true;
+        console.log('✅ Mailchimp detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Klaviyo
+    if (window._klOnsite || window.klaviyo || document.querySelector('script[src*="klaviyo"]')) {
+        scanner.emailMarketing.klaviyo = true;
+        console.log('✅ Klaviyo detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // ActiveCampaign
+    if (window.ActiveCampaign || document.querySelector('script[src*="activehosted.com"]')) {
+        scanner.emailMarketing.activeCampaign = true;
+        console.log('✅ ActiveCampaign detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // 3. CHAT & SUPPORT
+    console.log('\n%c💬 ESCANEANDO CHAT & SUPPORT', 'background: #dc2626; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Intercom
+    if (window.Intercom || window.intercomSettings) {
+        scanner.chatSupport.intercom = true;
+        console.log('✅ Intercom detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Drift
+    if (window.drift || document.querySelector('script[src*="drift"]')) {
+        scanner.chatSupport.drift = true;
+        console.log('✅ Drift detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Zendesk
+    if (window.zE || window.zESettings) {
+        scanner.chatSupport.zendesk = true;
+        console.log('✅ Zendesk detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Tawk.to
+    if (window.Tawk_API || document.querySelector('script[src*="tawk.to"]')) {
+        scanner.chatSupport.tawkto = true;
+        console.log('✅ Tawk.to detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // 4. AUTOMATION
+    console.log('\n%c🔧 ESCANEANDO AUTOMATION', 'background: #7c3aed; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Zapier
+    const zapierForms = document.querySelectorAll('form[action*="hooks.zapier.com"]');
+    if (zapierForms.length > 0) {
+        scanner.automation.zapier = { webhooks: zapierForms.length };
+        console.log('✅ Zapier webhooks detectados:', zapierForms.length);
+        scanner.totalIntegrations++;
+    }
+    
+    // Make/Integromat
+    const makeForms = document.querySelectorAll('form[action*="hook.integromat.com"], form[action*="hook.eu1.make.com"]');
+    if (makeForms.length > 0) {
+        scanner.automation.make = { webhooks: makeForms.length };
+        console.log('✅ Make/Integromat webhooks detectados:', makeForms.length);
+        scanner.totalIntegrations++;
+    }
+    
+    // 5. PAYMENTS
+    console.log('\n%c💳 ESCANEANDO PAYMENT PROCESSORS', 'background: #f59e0b; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Stripe
+    if (window.Stripe || document.querySelector('script[src*="stripe.com"]')) {
+        scanner.payments.stripe = true;
+        console.log('✅ Stripe detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // PayPal
+    if (window.paypal || document.querySelector('script[src*="paypal.com"]')) {
+        scanner.payments.paypal = true;
+        console.log('✅ PayPal detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // 6. ANALYTICS
+    console.log('\n%c📊 ESCANEANDO ANALYTICS', 'background: #065f46; color: white; padding: 5px; border-radius: 3px;');
+    
+    // Segment
+    if (window.analytics && window.analytics.track) {
+        scanner.analytics.segment = true;
+        console.log('✅ Segment detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Mixpanel
+    if (window.mixpanel) {
+        scanner.analytics.mixpanel = true;
+        console.log('✅ Mixpanel detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Hotjar
+    if (window.hj || window._hjSettings) {
+        scanner.analytics.hotjar = true;
+        console.log('✅ Hotjar detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // RESUMEN FINAL
+    console.log('\n%c📋 RESUMEN DEL ESCANEO', 'background: linear-gradient(90deg, #10b981 0%, #059669 100%); color: white; font-size: 14px; padding: 10px; border-radius: 5px;');
+    console.table(scanner);
+    console.log('Total integraciones detectadas:', scanner.totalIntegrations);
+    
+    // Guardar resultados
     window.integrationScan = scanner;
-    console.log('\n✅ Escaneo completo. Resultados en: window.integrationScan');
+    console.log('\n✅ Resultados disponibles en: window.integrationScan');
+    
+    // Función para descargar
+    window.downloadScanResults = function() {
+        const dataStr = JSON.stringify(scanner, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        const exportName = `scan_${window.location.hostname}_${new Date().toISOString().slice(0,10)}.json`;
+        
+        const link = document.createElement('a');
+        link.setAttribute('href', dataUri);
+        link.setAttribute('download', exportName);
+        link.click();
+        console.log('✅ Descargado:', exportName);
+    };
+    
+    console.log('💡 Ejecuta downloadScanResults() para descargar el reporte');
 })();</code></pre>
 </div>
             
@@ -724,46 +874,87 @@
     
     <script>
     function copyCode(btn) {
-    const scriptElement = document.getElementById('scanner-script');
-    const code = scriptElement ? scriptElement.textContent : '';
+        // Script hardcodeado directamente
+        const scriptCompleto = `(function() {
+    console.clear();
+    console.log('%c🚀 ULTIMATE CRM & INTEGRATION SCANNER v4.0', 'background: linear-gradient(90deg, #FF8C42 0%, #FFB088 100%); color: white; font-size: 16px; padding: 10px 20px; border-radius: 5px; font-weight: bold;');
     
-    navigator.clipboard.writeText(code).then(() => {
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '✅ Copiado!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.classList.remove('copied');
-        }, 2000);
-    }).catch(err => {
-        // Fallback para navegadores antiguos
-        const textArea = document.createElement('textarea');
-        textArea.value = code;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
+    const scanner = {
+        crms: {},
+        emailMarketing: {},
+        chatSupport: {},
+        automation: {},
+        payments: {},
+        totalIntegrations: 0
+    };
+    
+    // Detectar HubSpot
+    if (window._hsq || window.hbspt) {
+        scanner.crms.hubspot = true;
+        console.log('✅ HubSpot detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Detectar Salesforce  
+    if (window.SFDCSessionVars || window.sforce) {
+        scanner.crms.salesforce = true;
+        console.log('✅ Salesforce detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Detectar Intercom
+    if (window.Intercom || window.intercomSettings) {
+        scanner.chatSupport.intercom = true;
+        console.log('✅ Intercom detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Detectar Drift
+    if (window.drift) {
+        scanner.chatSupport.drift = true;
+        console.log('✅ Drift detectado');
+        scanner.totalIntegrations++;
+    }
+    
+    // Detectar Zapier webhooks
+    const forms = document.querySelectorAll('form[action*="hooks.zapier.com"]');
+    if (forms.length > 0) {
+        scanner.automation.zapier = true;
+        console.log('✅ Zapier webhooks detectados');
+        scanner.totalIntegrations++;
+    }
+    
+    // Guardar resultados
+    window.integrationScan = scanner;
+    console.log('\\n📊 Total integraciones detectadas:', scanner.totalIntegrations);
+    console.log('✅ Resultados disponibles en: window.integrationScan');
+})();`;
         
-        btn.innerHTML = '✅ Copiado!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.classList.remove('copied');
-        }, 2000);
-    });
-}
-        
-        navigator.clipboard.writeText(fullScript).then(() => {
-            const originalText = btn.innerHTML;
+        // Copiar al portapapeles
+        navigator.clipboard.writeText(scriptCompleto).then(() => {
             btn.innerHTML = '✅ Copiado!';
             btn.classList.add('copied');
             setTimeout(() => {
-                btn.innerHTML = originalText;
+                btn.innerHTML = '📋 Copiar Script';
                 btn.classList.remove('copied');
             }, 2000);
-        }).catch(err => {
-            console.error('Error al copiar:', err);
-            alert('Error al copiar el script. Por favor, selecciona y copia manualmente.');
+        }).catch(() => {
+            // Método alternativo si falla
+            const textarea = document.createElement('textarea');
+            textarea.value = scriptCompleto;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            btn.innerHTML = '✅ Copiado!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = '📋 Copiar Script';
+                btn.classList.remove('copied');
+            }, 2000);
         });
     }
 </script>
