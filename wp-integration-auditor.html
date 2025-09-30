@@ -333,6 +333,44 @@
     </style>
 </head>
 <body>
+    <!-- Botón flotante para volver al index -->
+<a href="index.html" class="home-button" title="Volver al inicio">
+    🏠
+</a>
+
+<style>
+    .home-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #FF8C42, #FFB088);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-size: 1.5em;
+        box-shadow: 0 4px 15px rgba(255, 140, 66, 0.3);
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+    
+    .home-button:hover {
+        transform: scale(1.1) rotate(10deg);
+        box-shadow: 0 6px 25px rgba(255, 140, 66, 0.5);
+    }
+    
+    /* Opcional: versión más minimalista */
+    @media (max-width: 768px) {
+        .home-button {
+            width: 45px;
+            height: 45px;
+            font-size: 1.3em;
+        }
+    }
+</style>
     <div class="container">
         <div class="header">
             <h1>🛠️ WP/WooCommerce Integration Auditor</h1>
