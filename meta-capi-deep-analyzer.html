@@ -13,9 +13,29 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #1877f2 0%, #0e4eb4 100%);
+            background: #0a0a0a;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 140, 66, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 140, 66, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 140, 66, 0.08) 0%, transparent 50%);
             min-height: 100vh;
             padding: 20px;
+            color: #ffffff;
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF8C42;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFB088;
         }
         
         .container {
@@ -25,14 +45,23 @@
         
         .header {
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #FF8C42 0%, #FFB088 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 140, 66, 0.3);
+        }
+        
+        .header p {
+            color: #a0a0a0;
+            font-size: 1.1em;
+            font-weight: 300;
         }
         
         .info-grid {
@@ -43,20 +72,47 @@
         }
         
         .info-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: #141414;
+            border: 1px solid #222;
             border-radius: 15px;
-            padding: 20px;
-            color: white;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #FF8C42, #FFB088);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: #FF8C42;
+            box-shadow: 
+                0 10px 30px rgba(255, 140, 66, 0.15),
+                0 0 0 1px rgba(255, 140, 66, 0.2);
+        }
+        
+        .info-card:hover::before {
+            transform: scaleX(1);
         }
         
         .info-card h3 {
             margin-bottom: 15px;
             font-size: 1.2em;
+            color: #FF8C42;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 600;
         }
         
         .info-card ul {
@@ -65,8 +121,14 @@
         }
         
         .info-card li {
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #b0b0b0;
+            transition: color 0.2s;
+        }
+        
+        .info-card li:hover {
+            color: #FFB088;
         }
         
         .info-card li:last-child {
@@ -74,122 +136,218 @@
         }
         
         .main-card {
-            background: white;
+            background: #141414;
+            border: 1px solid #222;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
         
         .alert {
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            color: #92400e;
+            background: rgba(255, 140, 66, 0.1);
+            border-left: 4px solid #FF8C42;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #FFB088;
+            border: 1px solid rgba(255, 140, 66, 0.2);
         }
         
         .alert strong {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            color: #FF8C42;
+            font-size: 1.1em;
+        }
+        
+        h2 {
+            color: #FF8C42;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        
+        p {
+            color: #b0b0b0;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
         
         .code-container {
-            background: #1e1e1e;
-            border-radius: 10px;
-            padding: 20px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 25px;
             position: relative;
-            margin-top: 20px;
+            margin-top: 30px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         
         .code-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #333;
+        }
+        
+        .code-header span {
+            color: #FF8C42;
+            font-weight: 600;
+            font-size: 1em;
         }
         
         .copy-btn {
-            background: linear-gradient(135deg, #1877f2, #0e4eb4);
-            color: white;
+            background: linear-gradient(135deg, #FF8C42, #FFB088);
+            color: #0a0a0a;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85em;
+            font-size: 0.9em;
+            font-weight: 600;
             transition: all 0.3s;
         }
         
         .copy-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+            box-shadow: 0 5px 20px rgba(255, 140, 66, 0.4);
         }
         
         .copy-btn.copied {
             background: #10b981;
+            color: white;
         }
         
         pre {
             color: #e5e5e5;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 0.9em;
+            font-size: 0.85em;
             line-height: 1.6;
             overflow-x: auto;
             white-space: pre-wrap;
             word-wrap: break-word;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        pre::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        pre::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        
+        pre::-webkit-scrollbar-thumb {
+            background: #FF8C42;
+            border-radius: 3px;
         }
         
         .results-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 10px;
-            border: 2px solid #e2e8f0;
+            margin-top: 40px;
+            padding: 30px;
+            background: #0a0a0a;
+            border-radius: 12px;
+            border: 1px solid #222;
         }
         
         .results-section h3 {
-            margin-bottom: 15px;
-            color: #1e293b;
+            margin-bottom: 25px;
+            color: #FF8C42;
+            font-size: 1.4em;
+            font-weight: 600;
         }
         
         .result-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #e2e8f0;
+            background: #141414;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #222;
+            transition: all 0.3s ease;
+        }
+        
+        .result-item:hover {
+            border-color: rgba(255, 140, 66, 0.3);
+            box-shadow: 0 5px 20px rgba(255, 140, 66, 0.1);
         }
         
         .result-item strong {
-            color: #1877f2;
+            color: #FF8C42;
             display: inline-block;
             margin-right: 10px;
+            font-size: 1.1em;
+        }
+        
+        .result-item ol {
+            margin-top: 15px;
+            margin-left: 20px;
+            color: #a0a0a0;
+        }
+        
+        .result-item ol li {
+            padding: 5px 0;
+            line-height: 1.6;
         }
         
         .badge {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 5px 12px;
+            border-radius: 20px;
             font-size: 0.8em;
             font-weight: 600;
             margin-left: 10px;
+            text-transform: uppercase;
         }
         
         .badge.active {
-            background: #10b981;
-            color: white;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
         
         .badge.warning {
-            background: #f59e0b;
-            color: white;
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
         
         .badge.info {
-            background: #1877f2;
-            color: white;
+            background: rgba(255, 140, 66, 0.15);
+            color: #FF8C42;
+            border: 1px solid rgba(255, 140, 66, 0.3);
+        }
+        
+        /* Animaciones sutiles */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+        
+        .header h1 {
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-card {
+                padding: 25px;
+            }
         }
     </style>
 </head>
@@ -238,12 +396,12 @@
                 Detecté que AnyTrack está presente. Esta herramienta frecuentemente maneja el CAPI automáticamente. También veo Segmetrics y Klaviyo que podrían estar enviando eventos server-side.
             </div>
             
-            <h2 style="margin-bottom: 20px;">🔬 Script de Análisis Profundo CAPI</h2>
-            <p style="margin-bottom: 20px;">Este script te ayudará a identificar exactamente cómo está configurado el CAPI, qué plugin lo maneja, y qué eventos se están enviando:</p>
+            <h2>🔬 Script de Análisis Profundo CAPI</h2>
+            <p>Este script te ayudará a identificar exactamente cómo está configurado el CAPI, qué plugin lo maneja, y qué eventos se están enviando:</p>
             
             <div class="code-container">
                 <div class="code-header">
-                    <span style="color: white;">capi-deep-analyzer.js</span>
+                    <span>capi-deep-analyzer.js</span>
                     <button class="copy-btn" onclick="copyCode(this)">📋 Copiar Script</button>
                 </div>
                 <pre><code>(function() {
@@ -556,7 +714,7 @@
                 
                 <div class="result-item">
                     <strong>Próximos Pasos:</strong>
-                    <ol style="margin-top: 10px; margin-left: 20px;">
+                    <ol>
                         <li>Ejecuta el script de arriba en el sitio</li>
                         <li>Navega por productos y agrega algo al carrito</li>
                         <li>Revisa los eventos capturados en la consola</li>
