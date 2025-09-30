@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Mis Herramientas de Auditoría</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        .tool-card h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .tool-card p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+        .emoji {
+            font-size: 2em;
+            margin-bottom: 15px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Mis Herramientas de Auditoría</h1>
+        
+        <div class="tools-grid">
+            <a href="wp-integration-auditor.html" class="tool-card">
+                <span class="emoji">🔍</span>
+                <h2>WP Integration Auditor</h2>
+                <p>Audita WordPress, WooCommerce, píxeles y tracking</p>
+            </a>
+            
+            <a href="meta-capi-deep-analyzer.html" class="tool-card">
+                <span class="emoji">📘</span>
+                <h2>Meta CAPI Analyzer</h2>
+                <p>Análisis profundo de Facebook Pixel y Conversions API</p>
+            </a>
+            
+            <a href="ultimate-crm-scanner.html" class="tool-card">
+                <span class="emoji">🚀</span>
+                <h2>Ultimate CRM Scanner</h2>
+                <p>Detecta 100+ CRMs, automation, webhooks y APIs</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
