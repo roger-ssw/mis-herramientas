@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consent &amp; Compliance Scanner - Martech Toolkit</title>
+    <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+    <a href="index.html" class="home-button" title="Volver al inicio" aria-label="Volver al inicio">&#127968;</a>
+
+    <div class="container" style="max-width: 1400px;">
+        <div class="header">
+            <h1>Consent &amp; Compliance Scanner</h1>
+            <p>Detecta CMPs, analiza cookies pre-consent, valida configuración de consent mode y cumplimiento GDPR/CCPA</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">CMPs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">Cookies</div>
+                <div class="stat-label">Pre-consent</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">GA4</div>
+                <div class="stat-label">Consent Mode</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">Tags</div>
+                <div class="stat-label">Firing Order</div>
+            </div>
+        </div>
+
+        <div class="main-card">
+            <div class="alert">
+                <strong>Why this matters:</strong>
+                <p>Post-GDPR/CCPA, tags firing before consent is a compliance risk. This scanner detects CMPs, checks which cookies and tags load before user consent, validates GA4 Consent Mode v2, and flags potential violations.</p>
+            </div>
+
+            <div class="info-grid" style="margin-bottom: 30px;">
+                <div class="info-card">
+                    <h3>CMPs Detected</h3>
+                    <ul>
+                        <li>OneTrust</li>
+                        <li>Cookiebot</li>
+                        <li>CookieYes</li>
+                        <li>Osano</li>
+                        <li>TrustArc</li>
+                        <li>Quantcast Choice</li>
+                        <li>Complianz</li>
+                        <li>iubenda</li>
+                        <li>Termly</li>
+                        <li>CookieFirst</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>Compliance Checks</h3>
+                    <ul>
+                        <li>Pre-consent cookie drops</li>
+                        <li>Tags firing before consent</li>
+                        <li>GA4 Consent Mode v2 config</li>
+                        <li>GTM consent initialization</li>
+                        <li>Cookie categorization</li>
+                        <li>Third-party scripts audit</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>Tag Conflict Detection</h3>
+                    <ul>
+                        <li>Duplicate Meta Pixels</li>
+                        <li>Multiple GA4 instances</li>
+                        <li>Conflicting GTM containers</li>
+                        <li>Redundant tracking scripts</li>
+                        <li>Render-blocking trackers</li>
+                        <li>Tag load order analysis</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-title">consent-compliance-scanner.js</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar Script</button>
+                </div>
+                <pre><code>(function() {
+    console.clear();
+    console.log('%c CONSENT & COMPLIANCE SCANNER v1.0', 'background: #7c3aed; color: white; font-size: 16px; padding: 10px; border-radius: 5px;');
+    console.log('%c' + '='.repeat(55), 'color: #7c3aed;');
+
+    var report = {
+        url: window.location.href,
+        timestamp: new Date().toISOString(),
+        cmp: { detected: null, details: {} },
+        consentMode: { detected: false, config: {} },
+        cookies: { total: 0, categories: {}, preConcent: [] },
+        tags: { duplicates: [], conflicts: [], renderBlocking: [] },
+        compliance: { risks: [], recommendations: [] }
+    };
+
+    // ─── 1. CMP DETECTION ────────────────────────────────────
+    console.log('\n%c CMP (Consent Management Platform)', 'background: #7c3aed; color: white; padding: 5px; border-radius: 3px;');
+
+    var cmps = [
+        { name: 'OneTrust', check: function() { return !!(window.OneTrust || window.OptanonWrapper || document.querySelector('script[src*="onetrust"]') || document.getElementById('onetrust-consent-sdk')); },
+          details: function() { var d = {}; if (window.OneTrust) { try { d.groups = window.OneTrust.GetDomainData && window.OneTrust.GetDomainData().Groups; } catch(e) {} } return d; } },
+        { name: 'Cookiebot', check: function() { return !!(window.Cookiebot || document.querySelector('script[src*="cookiebot"]') || document.getElementById('CookiebotDialog')); },
+          details: function() { return window.Cookiebot ? { consent: window.Cookiebot.consent, hasResponse: window.Cookiebot.hasResponse } : {}; } },
+        { name: 'CookieYes', check: function() { return !!(window.cookieyes || document.querySelector('script[src*="cookieyes"]') || document.querySelector('[class*="cky-"]')); },
+          details: function() { return {}; } },
+        { name: 'Osano', check: function() { return !!(window.Osano || document.querySelector('script[src*="osano"]')); },
+          details: function() { return {}; } },
+        { name: 'TrustArc', check: function() { return !!(window.truste || document.querySelector('script[src*="trustarc"]') || document.getElementById('truste-consent-track')); },
+          details: function() { return {}; } },
+        { name: 'Quantcast Choice', check: function() { return !!(window.__tcfapi || window.quantserve || document.querySelector('script[src*="quantcast"]')); },
+          details: function() { var d = {}; if (window.__tcfapi) { try { window.__tcfapi('getTCData', 2, function(data) { d.tcData = data; }); } catch(e) {} } return d; } },
+        { name: 'Complianz', check: function() { return !!(window.complianz || document.querySelector('script[src*="complianz"]') || document.querySelector('.cmplz-cookiebanner')); },
+          details: function() { return {}; } },
+        { name: 'iubenda', check: function() { return !!(window._iub || document.querySelector('script[src*="iubenda"]')); },
+          details: function() { return window._iub ? { csConfiguration: window._iub.csConfiguration } : {}; } },
+        { name: 'Termly', check: function() { return !!(document.querySelector('script[src*="termly"]') || document.querySelector('[data-termly]')); },
+          details: function() { return {}; } },
+        { name: 'CookieFirst', check: function() { return !!(window.CookieFirst || document.querySelector('script[src*="cookiefirst"]')); },
+          details: function() { return {}; } },
+        { name: 'Borlabs Cookie', check: function() { return !!(window.BorlabsCookie || document.querySelector('script[src*="borlabs"]') || document.getElementById('BorlabsCookieBox')); },
+          details: function() { return {}; } },
+        { name: 'GDPR Cookie Compliance (Moove)', check: function() { return !!(document.querySelector('.moove-gdpr-cookie-notice') || document.querySelector('script[src*="moove"]')); },
+          details: function() { return {}; } }
+    ];
+
+    var cmpFound = false;
+    cmps.forEach(function(cmp) {
+        try {
+            if (cmp.check()) {
+                report.cmp.detected = cmp.name;
+                report.cmp.details = cmp.details();
+                console.log('  ' + cmp.name + ' detected');
+                cmpFound = true;
+            }
+        } catch(e) {}
+    });
+
+    if (!cmpFound) {
+        console.log('  No CMP detected');
+        report.compliance.risks.push('No Consent Management Platform detected — potential GDPR/CCPA risk');
+    }
+
+    // TCF API check
+    if (window.__tcfapi) {
+        report.cmp.tcfAPI = true;
+        console.log('  TCF API v2 available');
+    }
+
+    // ─── 2. GA4 CONSENT MODE ─────────────────────────────────
+    console.log('\n%c GA4 CONSENT MODE', 'background: #ea4335; color: white; padding: 5px; border-radius: 3px;');
+
+    // Check dataLayer for consent initialization
+    if (window.dataLayer) {
+        window.dataLayer.forEach(function(item) {
+            // consent default
+            if (item[0] === 'consent' && item[1] === 'default') {
+                report.consentMode.detected = true;
+                report.consentMode.config.default = item[2];
+                console.log('  Consent Mode DEFAULT found:', JSON.stringify(item[2]));
+            }
+            // consent update
+            if (item[0] === 'consent' && item[1] === 'update') {
+                report.consentMode.config.update = item[2];
+                console.log('  Consent Mode UPDATE found:', JSON.stringify(item[2]));
+            }
+            // gtag consent
+            if (item.event === 'gtm.init_consent') {
+                report.consentMode.gtmInitConsent = true;
+                console.log('  GTM Consent Initialization event found');
+            }
+        });
+
+        // Check for consent mode v2 parameters
+        var consentV2Params = ['ad_storage', 'analytics_storage', 'ad_user_data', 'ad_personalization'];
+        var foundParams = [];
+        window.dataLayer.forEach(function(item) {
+            if (item[0] === 'consent') {
+                var config = item[2] || {};
+                consentV2Params.forEach(function(p) {
+                    if (config[p] && foundParams.indexOf(p) === -1) foundParams.push(p);
+                });
+            }
+        });
+
+        if (foundParams.length > 0) {
+            report.consentMode.v2params = foundParams;
+            console.log('  Consent Mode v2 params:', foundParams.join(', '));
+            if (foundParams.indexOf('ad_user_data') === -1 || foundParams.indexOf('ad_personalization') === -1) {
+                report.compliance.risks.push('Consent Mode v2 missing required params: ad_user_data and/or ad_personalization (required by Google since March 2024)');
+            }
+        }
+    }
+
+    if (!report.consentMode.detected) {
+        console.log('  Consent Mode not detected');
+        if (window.gtag || window.dataLayer) {
+            report.compliance.risks.push('Google Analytics/GTM present but Consent Mode not configured');
+        }
+    }
+
+    // Check for consent mode in script tags
+    Array.from(document.scripts).forEach(function(script) {
+        var content = script.innerHTML;
+        if (content.indexOf('consent') !== -1 && content.indexOf('default') !== -1 && content.indexOf('ad_storage') !== -1) {
+            if (!report.consentMode.detected) {
+                report.consentMode.detected = true;
+                report.consentMode.inScript = true;
+                console.log('  Consent Mode config found in inline script');
+            }
+        }
+    });
+
+    // ─── 3. COOKIE ANALYSIS ──────────────────────────────────
+    console.log('\n%c COOKIE ANALYSIS', 'background: #f59e0b; color: white; padding: 5px; border-radius: 3px;');
+
+    var cookieCategories = {
+        necessary: { patterns: ['PHPSESSID', 'wordpress_', 'wp_', 'wc_', 'JSESSIONID', 'csrftoken', 'session', 'laravel_'], found: [] },
+        analytics: { patterns: ['_ga', '_gid', '_gat', '_hjid', '_hjSession', '_clck', '_clsk', 'mp_', 'ajs_', 'amplitude', 'ph_'], found: [] },
+        marketing: { patterns: ['_fbp', '_fbc', '_gcl', '_ttp', '_pin', '_uetsid', '_uetvid', 'fr', '_scid', '_li_', '_rdt_'], found: [] },
+        functional: { patterns: ['pll_language', 'qtrans', 'locale', 'lang', 'currency', 'recently_viewed'], found: [] },
+        unknown: { patterns: [], found: [] }
+    };
+
+    var allCookies = document.cookie.split(';').map(function(c) { return c.trim(); }).filter(function(c) { return c; });
+    report.cookies.total = allCookies.length;
+
+    allCookies.forEach(function(cookie) {
+        var name = cookie.split('=')[0].trim();
+        var categorized = false;
+
+        Object.keys(cookieCategories).forEach(function(cat) {
+            if (cat === 'unknown') return;
+            cookieCategories[cat].patterns.forEach(function(pattern) {
+                if (name.toLowerCase().indexOf(pattern.toLowerCase()) !== -1) {
+                    cookieCategories[cat].found.push(name);
+                    categorized = true;
+                }
+            });
+        });
+
+        if (!categorized) {
+            cookieCategories.unknown.found.push(name);
+        }
+    });
+
+    console.log('  Total cookies: ' + report.cookies.total);
+    Object.keys(cookieCategories).forEach(function(cat) {
+        var found = cookieCategories[cat].found;
+        if (found.length > 0) {
+            console.log('  ' + cat.charAt(0).toUpperCase() + cat.slice(1) + ' (' + found.length + '): ' + found.join(', '));
+        }
+    });
+
+    report.cookies.categories = {};
+    Object.keys(cookieCategories).forEach(function(cat) {
+        if (cookieCategories[cat].found.length > 0) {
+            report.cookies.categories[cat] = cookieCategories[cat].found;
+        }
+    });
+
+    // Pre-consent detection: marketing/analytics cookies without CMP or before consent
+    if (!cmpFound) {
+        var preConsentRisks = [].concat(cookieCategories.analytics.found, cookieCategories.marketing.found);
+        if (preConsentRisks.length > 0) {
+            report.cookies.preConcent = preConsentRisks;
+            report.compliance.risks.push(preConsentRisks.length + ' tracking cookies set without a CMP: ' + preConsentRisks.join(', '));
+        }
+    }
+
+    if (cookieCategories.unknown.found.length > 3) {
+        report.compliance.risks.push(cookieCategories.unknown.found.length + ' unrecognized cookies — review for compliance categorization');
+    }
+
+    // ─── 4. TAG CONFLICTS & DUPLICATES ───────────────────────
+    console.log('\n%c TAG CONFLICTS & DUPLICATES', 'background: #dc2626; color: white; padding: 5px; border-radius: 3px;');
+
+    // Duplicate Meta Pixels
+    var pixelIds = [];
+    Array.from(document.scripts).forEach(function(script) {
+        var matches = script.innerHTML.match(/fbq\s*\(\s*['"]init['"]\s*,\s*['"](\d+)['"]/g);
+        if (matches) {
+            matches.forEach(function(m) {
+                var id = m.match(/['"](\d+)['"]/);
+                if (id) pixelIds.push(id[1]);
+            });
+        }
+    });
+    var uniquePixels = Array.from(new Set(pixelIds));
+    if (pixelIds.length > uniquePixels.length) {
+        report.tags.duplicates.push('Meta Pixel initialized multiple times: ' + pixelIds.join(', '));
+        console.log('  DUPLICATE: Meta Pixel initialized ' + pixelIds.length + ' times (' + uniquePixels.length + ' unique)');
+    } else if (uniquePixels.length > 1) {
+        console.log('  Multiple Meta Pixels: ' + uniquePixels.join(', '));
+    }
+
+    // Duplicate GA4
+    var gaIds = [];
+    Array.from(document.scripts).forEach(function(script) {
+        var matches = script.innerHTML.match(/['"]config['"]\s*,\s*['"]([G]-[A-Z0-9]+)['"]/g);
+        if (matches) {
+            matches.forEach(function(m) {
+                var id = m.match(/['"]([G]-[A-Z0-9]+)['"]/);
+                if (id) gaIds.push(id[1]);
+            });
+        }
+    });
+    var gaScriptTags = document.querySelectorAll('script[src*="googletagmanager.com/gtag/js"]');
+    gaScriptTags.forEach(function(s) {
+        var m = s.src.match(/id=([G]-[A-Z0-9]+)/);
+        if (m) gaIds.push(m[1]);
+    });
+    var uniqueGA = Array.from(new Set(gaIds));
+    if (gaIds.length > uniqueGA.length) {
+        report.tags.duplicates.push('GA4 config called multiple times: ' + gaIds.join(', '));
+        console.log('  DUPLICATE: GA4 loaded ' + gaIds.length + ' times (' + uniqueGA.length + ' unique)');
+    }
+
+    // Multiple GTM containers
+    var gtmIds = [];
+    document.querySelectorAll('script[src*="googletagmanager.com/gtm.js"]').forEach(function(s) {
+        var m = s.src.match(/id=([A-Z0-9-]+)/);
+        if (m) gtmIds.push(m[1]);
+    });
+    if (gtmIds.length > 1) {
+        report.tags.conflicts.push('Multiple GTM containers: ' + gtmIds.join(', '));
+        console.log('  CONFLICT: ' + gtmIds.length + ' GTM containers: ' + gtmIds.join(', '));
+    }
+
+    // Render-blocking tracking scripts
+    var renderBlocking = [];
+    document.querySelectorAll('head script[src]').forEach(function(script) {
+        if (!script.async && !script.defer) {
+            var trackingDomains = ['facebook', 'google-analytics', 'googletagmanager', 'hotjar', 'clarity', 'tiktok', 'snap', 'pinterest', 'linkedin'];
+            trackingDomains.forEach(function(domain) {
+                if (script.src.indexOf(domain) !== -1) {
+                    renderBlocking.push(script.src.split('/')[2]);
+                }
+            });
+        }
+    });
+    if (renderBlocking.length > 0) {
+        report.tags.renderBlocking = renderBlocking;
+        console.log('  RENDER-BLOCKING trackers in <head>: ' + renderBlocking.join(', '));
+        report.compliance.recommendations.push('Move render-blocking tracking scripts to async/defer: ' + renderBlocking.join(', '));
+    }
+
+    if (report.tags.duplicates.length === 0 && report.tags.conflicts.length === 0) {
+        console.log('  No duplicates or conflicts detected');
+    }
+
+    // ─── 5. DATALAYER DEEP ANALYSIS ──────────────────────────
+    console.log('\n%c DATALAYER DEEP ANALYSIS', 'background: #065f46; color: white; padding: 5px; border-radius: 3px;');
+
+    if (window.dataLayer) {
+        var events = {};
+        var ecommerceEvents = [];
+        var ecomFields = ['items', 'value', 'currency', 'transaction_id', 'item_list_name'];
+
+        window.dataLayer.forEach(function(item) {
+            if (item.event) {
+                if (!events[item.event]) events[item.event] = 0;
+                events[item.event]++;
+            }
+
+            // GA4 enhanced ecommerce events
+            if (item.ecommerce || (item.event && ['view_item', 'view_item_list', 'add_to_cart', 'remove_from_cart', 'begin_checkout', 'purchase', 'add_payment_info', 'add_shipping_info'].indexOf(item.event) !== -1)) {
+                var ecomEvent = { event: item.event, hasEcommerceKey: !!item.ecommerce };
+                var ecom = item.ecommerce || item;
+
+                ecomFields.forEach(function(field) {
+                    ecomEvent[field] = !!(ecom[field] || (item.ecommerce && item.ecommerce[field]));
+                });
+
+                ecommerceEvents.push(ecomEvent);
+            }
+        });
+
+        report.dataLayer = { events: events, ecommerce: ecommerceEvents, totalEntries: window.dataLayer.length };
+
+        console.log('  DataLayer entries: ' + window.dataLayer.length);
+        console.log('  Events found:');
+        Object.keys(events).forEach(function(evt) {
+            console.log('    ' + evt + ' (' + events[evt] + 'x)');
+        });
+
+        if (ecommerceEvents.length > 0) {
+            console.log('  E-commerce events:');
+            ecommerceEvents.forEach(function(evt) {
+                var missing = [];
+                if (!evt.items) missing.push('items');
+                if (!evt.value) missing.push('value');
+                if (!evt.currency) missing.push('currency');
+                console.log('    ' + evt.event + (missing.length ? ' - MISSING: ' + missing.join(', ') : ' - complete'));
+                if (missing.length > 0) {
+                    report.compliance.recommendations.push('E-commerce event "' + evt.event + '" missing: ' + missing.join(', '));
+                }
+            });
+        }
+    } else {
+        console.log('  No dataLayer found');
+    }
+
+    // ─── 6. SERVER-SIDE TAGGING DETECTION ────────────────────
+    console.log('\n%c SERVER-SIDE TAGGING', 'background: #0891b2; color: white; padding: 5px; border-radius: 3px;');
+
+    var ssIndicators = [];
+
+    // Check for first-party domain GTM endpoints
+    Array.from(document.scripts).forEach(function(script) {
+        if (script.src) {
+            // sGTM typically uses first-party subdomain
+            if (script.src.match(/\/gtm\.js/) && script.src.indexOf('googletagmanager.com') === -1) {
+                ssIndicators.push('First-party GTM endpoint: ' + script.src.split('/')[2]);
+            }
+            // Common sGTM subdomain patterns
+            if (script.src.match(/(sgtm\.|ss\.|server\.|track\.|collect\.|data\.)/) && script.src.indexOf(window.location.hostname.split('.').slice(-2).join('.')) !== -1) {
+                ssIndicators.push('Possible sGTM subdomain: ' + script.src.split('/')[2]);
+            }
+        }
+    });
+
+    // Check for transport_url in gtag config
+    Array.from(document.scripts).forEach(function(script) {
+        if (script.innerHTML.indexOf('transport_url') !== -1 || script.innerHTML.indexOf('server_container_url') !== -1) {
+            ssIndicators.push('transport_url / server_container_url configured');
+        }
+    });
+
+    report.serverSideTagging = ssIndicators;
+    if (ssIndicators.length > 0) {
+        ssIndicators.forEach(function(s) { console.log('  ' + s); });
+    } else {
+        console.log('  No server-side tagging indicators found');
+    }
+
+    // ─── 7. COMPLIANCE SUMMARY ───────────────────────────────
+    console.log('\n%c COMPLIANCE REPORT', 'background: #059669; color: white; font-size: 14px; padding: 10px; border-radius: 5px;');
+    console.log('%c' + '='.repeat(55), 'color: #059669;');
+
+    // Generate recommendations
+    if (!cmpFound && allCookies.length > 5) {
+        report.compliance.recommendations.push('Install a CMP (OneTrust, Cookiebot, CookieYes) to manage consent');
+    }
+    if (!report.consentMode.detected && (window.gtag || window.google_tag_manager)) {
+        report.compliance.recommendations.push('Implement Google Consent Mode v2 (required for EU ads since March 2024)');
+    }
+    if (cookieCategories.unknown.found.length > 0) {
+        report.compliance.recommendations.push('Categorize ' + cookieCategories.unknown.found.length + ' unrecognized cookies in your CMP');
+    }
+
+    // Score
+    var riskCount = report.compliance.risks.length;
+    var score = riskCount === 0 ? 'LOW RISK' : riskCount <= 2 ? 'MEDIUM RISK' : 'HIGH RISK';
+    var scoreColor = riskCount === 0 ? '#10b981' : riskCount <= 2 ? '#f59e0b' : '#ef4444';
+
+    console.log('\n%c  Compliance Score: ' + score + ' (' + riskCount + ' issues)  ', 'background: ' + scoreColor + '; color: white; font-size: 14px; padding: 8px; border-radius: 5px;');
+
+    if (report.compliance.risks.length > 0) {
+        console.log('\n  RISKS:');
+        report.compliance.risks.forEach(function(r, i) { console.log('  ' + (i + 1) + '. ' + r); });
+    }
+
+    if (report.compliance.recommendations.length > 0) {
+        console.log('\n  RECOMMENDATIONS:');
+        report.compliance.recommendations.forEach(function(r, i) { console.log('  ' + (i + 1) + '. ' + r); });
+    }
+
+    // Export
+    window.complianceReport = report;
+    console.log('\n  Results: window.complianceReport');
+    console.log('  downloadComplianceJSON() for JSON');
+    console.log('  downloadComplianceHTML() for HTML report');
+
+    window.downloadComplianceJSON = function() {
+        var d = JSON.stringify(report, null, 2);
+        var uri = 'data:application/json;charset=utf-8,' + encodeURIComponent(d);
+        var name = 'compliance_' + (window.location.hostname || 'local') + '_' + new Date().toISOString().slice(0, 10) + '.json';
+        var a = document.createElement('a'); a.href = uri; a.download = name; a.click();
+    };
+
+    window.downloadComplianceHTML = function() {
+        var h = window.location.hostname || 'local';
+        var dt = new Date().toISOString().slice(0, 10);
+        var scoreHtml = '<div style="background:' + scoreColor + ';color:white;padding:20px;border-radius:10px;text-align:center;font-size:1.5em;margin-bottom:30px">' + score + ' — ' + riskCount + ' issues found</div>';
+        var risksHtml = report.compliance.risks.map(function(r) { return '<li style="padding:8px 0;color:#ef4444">' + r + '</li>'; }).join('');
+        var recsHtml = report.compliance.recommendations.map(function(r) { return '<li style="padding:8px 0;color:#f59e0b">' + r + '</li>'; }).join('');
+        var cookieHtml = Object.keys(report.cookies.categories).map(function(cat) {
+            return '<tr><td style="padding:8px;color:#FFB088;text-transform:capitalize">' + cat + '</td><td style="padding:8px;color:#a0a0a0">' + report.cookies.categories[cat].join(', ') + '</td></tr>';
+        }).join('');
+
+        var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Compliance Report - ' + h + '</title><style>body{font-family:system-ui;background:#0a0a0a;color:#e5e5e5;padding:40px;max-width:900px;margin:0 auto}h1{color:#FF8C42}h2{color:#FFB088;margin-top:25px}table{width:100%;border-collapse:collapse}td{border-bottom:1px solid #222}ul{list-style:none;padding:0}.section{background:#141414;padding:20px;border-radius:10px;margin-bottom:15px;border:1px solid #222}</style></head><body>';
+        html += '<h1>Consent & Compliance Report</h1>';
+        html += '<p style="color:#808080">Site: ' + h + ' | Date: ' + dt + '</p>';
+        html += scoreHtml;
+        html += '<div class="section"><h2>CMP</h2><p>' + (report.cmp.detected || 'None detected') + '</p></div>';
+        html += '<div class="section"><h2>Consent Mode</h2><p>' + (report.consentMode.detected ? 'Active' + (report.consentMode.v2params ? ' — Params: ' + report.consentMode.v2params.join(', ') : '') : 'Not configured') + '</p></div>';
+        html += '<div class="section"><h2>Cookies (' + report.cookies.total + ')</h2><table>' + cookieHtml + '</table></div>';
+        if (risksHtml) html += '<div class="section"><h2>Risks</h2><ul>' + risksHtml + '</ul></div>';
+        if (recsHtml) html += '<div class="section"><h2>Recommendations</h2><ul>' + recsHtml + '</ul></div>';
+        html += '</body></html>';
+
+        var blob = new Blob([html], {type:'text/html'});
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a'); a.href = url; a.download = 'compliance_' + h + '_' + dt + '.html'; a.click();
+        URL.revokeObjectURL(url);
+    };
+})();</code></pre>
+            </div>
+
+            <div class="feature-grid" style="margin-top: 30px;">
+                <div class="feature-card">
+                    <h4>CMP Detection</h4>
+                    <p>Identifies 12+ consent platforms including OneTrust, Cookiebot, CookieYes, iubenda, and Complianz.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Consent Mode v2</h4>
+                    <p>Validates GA4 Consent Mode v2 configuration including ad_user_data and ad_personalization params.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Cookie Categorization</h4>
+                    <p>Automatically categorizes all cookies as necessary, analytics, marketing, functional, or unknown.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Tag Conflict Detection</h4>
+                    <p>Finds duplicate pixels, multiple GTM containers, and render-blocking tracking scripts.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Server-Side Tagging</h4>
+                    <p>Detects sGTM indicators: first-party endpoints, transport_url, and custom subdomains.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Risk Scoring</h4>
+                    <p>Generates a compliance score (Low/Medium/High Risk) with specific issues and recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/shared.js"></script>
+</body>
+</html>

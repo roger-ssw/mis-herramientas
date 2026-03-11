@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Herramientas profesionales de auditoría web para detectar integraciones, tracking, CRMs y más.">
-    <title>Herramientas de Auditoría Web - Martech Toolkit v2</title>
+    <meta name="description" content="Herramientas profesionales de auditoría web para detectar integraciones, tracking, CRMs, compliance y más.">
+    <title>Martech Audit Toolkit v2</title>
     <link rel="stylesheet" href="css/shared.css">
     <style>
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
         }
 
         .tool-card {
             background: #141414;
             border: 1px solid #222;
             border-radius: 20px;
-            padding: 35px;
+            padding: 30px;
             text-decoration: none;
             color: inherit;
             transition: all 0.3s ease;
@@ -54,27 +54,29 @@
         .tool-card:hover::after { transform: scaleX(1); }
 
         .tool-card .emoji {
-            font-size: 3em;
-            margin-bottom: 20px;
+            font-size: 2.5em;
+            margin-bottom: 15px;
             display: block;
         }
 
         .tool-card h2 {
             color: #FF8C42;
-            margin-bottom: 15px;
-            font-size: 1.5em;
+            margin-bottom: 12px;
+            font-size: 1.3em;
         }
+
+        .tool-card p { font-size: 0.95em; }
 
         .tool-card .features {
             list-style: none;
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #808080;
         }
 
         .tool-card .features li {
-            padding: 5px 0;
+            padding: 4px 0;
             position: relative;
-            padding-left: 20px;
+            padding-left: 18px;
             transition: color 0.2s;
         }
 
@@ -93,10 +95,10 @@
             background: rgba(255, 140, 66, 0.15);
             color: #FF8C42;
             border: 1px solid rgba(255, 140, 66, 0.3);
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.8em;
-            margin-top: 15px;
+            font-size: 0.75em;
+            margin-top: 12px;
             font-weight: 600;
             transition: all 0.3s;
         }
@@ -107,37 +109,166 @@
             box-shadow: 0 0 10px rgba(255, 140, 66, 0.3);
         }
 
+        /* Featured card (Full Audit) */
+        .tool-card.featured {
+            grid-column: 1 / -1;
+            border-color: rgba(255, 140, 66, 0.3);
+            background: linear-gradient(135deg, #141414 0%, #1a1510 100%);
+        }
+
+        .tool-card.featured .badge {
+            background: rgba(255, 140, 66, 0.3);
+        }
+
+        .featured-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        /* Bookmarklet Section */
+        .bookmarklet-section {
+            margin-top: 50px;
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 35px;
+        }
+
+        .bookmarklet-section h2 {
+            color: #FF8C42;
+            margin-bottom: 8px;
+            font-size: 1.5em;
+        }
+
+        .bookmarklet-section > p {
+            color: #a0a0a0;
+            margin-bottom: 25px;
+        }
+
+        .bookmarklet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .bookmarklet-item {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .bookmarklet-item a {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C42, #FFB088);
+            color: #0a0a0a;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: grab;
+            transition: all 0.3s;
+        }
+
+        .bookmarklet-item a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 140, 66, 0.4);
+        }
+
+        .bookmarklet-item p {
+            font-size: 0.8em;
+            color: #606060;
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
+        .how-to-steps {
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 140, 66, 0.2);
+            border-radius: 12px;
+            padding: 20px 25px;
+        }
+
+        .how-to-steps h4 {
+            color: #FF8C42;
+            margin-bottom: 12px;
+        }
+
+        .how-to-steps ol {
+            margin-left: 20px;
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+
+        .how-to-steps li {
+            padding: 4px 0;
+            line-height: 1.5;
+        }
+
         .footer {
             text-align: center;
-            margin-top: 60px;
+            margin-top: 50px;
             color: #606060;
             font-size: 0.9em;
-            padding-top: 30px;
+            padding-top: 25px;
             border-top: 1px solid #1a1a1a;
         }
 
         .footer p { color: #606060; }
 
-        .header h1 { font-size: 3em; }
+        .header h1 { font-size: 2.8em; }
         .subtitle { font-size: 1.2em; color: #a0a0a0; font-weight: 300; }
 
         @media (max-width: 768px) {
             .tools-grid { grid-template-columns: 1fr; }
+            .featured-inner { grid-template-columns: 1fr; }
+            .tool-card.featured { grid-column: auto; }
+            .header h1 { font-size: 2em; }
         }
     </style>
 </head>
 <body>
-    <div class="container" style="max-width: 1000px;">
+    <div class="container" style="max-width: 1100px;">
         <div class="header">
-            <h1>Herramientas de Auditoría Web</h1>
-            <p class="subtitle">Scripts profesionales para auditar integraciones, tracking y CRMs</p>
+            <h1>Martech Audit Toolkit</h1>
+            <p class="subtitle">Scripts profesionales para auditar integraciones, tracking, CRMs y compliance</p>
         </div>
 
+        <!-- Featured: Full Audit -->
+        <div class="tools-grid" style="margin-bottom: 25px;">
+            <a href="full-martech-audit.html" class="tool-card featured" aria-label="Full Martech Audit">
+                <div class="featured-inner">
+                    <div>
+                        <span class="emoji" aria-hidden="true">&#9889;</span>
+                        <h2>Full Martech Audit</h2>
+                        <p>All 4 tools in a single script. One paste, complete analysis with unified HTML report.</p>
+                        <span class="badge">ALL-IN-ONE</span>
+                    </div>
+                    <div>
+                        <ul class="features">
+                            <li>WordPress &amp; E-commerce detection</li>
+                            <li>Meta Pixel &amp; CAPI analysis</li>
+                            <li>50+ CRM &amp; integration detectors</li>
+                            <li>Consent &amp; compliance audit</li>
+                            <li>DataLayer deep analysis</li>
+                            <li>Unified HTML report export</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Individual Tools -->
         <div class="tools-grid">
             <a href="wp-integration-auditor.html" class="tool-card" aria-label="WP Integration Auditor">
                 <span class="emoji" aria-hidden="true">&#128269;</span>
                 <h2>WP Integration Auditor</h2>
-                <p>Auditoría completa para WordPress y WooCommerce. Detecta píxeles, tracking y configuraciones.</p>
+                <p>Auditoría completa para WordPress y WooCommerce. Píxeles, tracking y configuraciones.</p>
                 <ul class="features">
                     <li>Meta Pixel &amp; CAPI</li>
                     <li>Google Analytics &amp; GTM</li>
@@ -150,32 +281,85 @@
             <a href="meta-capi-deep-analyzer.html" class="tool-card" aria-label="Meta CAPI Analyzer">
                 <span class="emoji" aria-hidden="true">&#128216;</span>
                 <h2>Meta CAPI Analyzer</h2>
-                <p>Análisis profundo de Facebook Pixel y Conversions API. Detecta plugins, event IDs y configuración server-side.</p>
+                <p>Análisis profundo de Facebook Pixel y Conversions API. Plugins, event IDs, server-side.</p>
                 <ul class="features">
-                    <li>Detección automática de CAPI</li>
+                    <li>Auto-detect Pixel IDs</li>
                     <li>Event IDs &amp; external_id</li>
                     <li>AnyTrack, PYS &amp; plugins</li>
-                    <li>Test de eventos en vivo</li>
+                    <li>Live event interception</li>
                 </ul>
                 <span class="badge">Meta / Facebook</span>
             </a>
 
             <a href="ultimate-crm-scanner.html" class="tool-card" aria-label="Ultimate CRM Scanner">
                 <span class="emoji" aria-hidden="true">&#128640;</span>
-                <h2>Ultimate CRM Scanner</h2>
-                <p>Scanner avanzado que detecta 50+ CRMs, herramientas de email, automation, chat y pagos.</p>
+                <h2>CRM &amp; Integration Scanner</h2>
+                <p>50+ CRMs, email tools, automation, chat, pagos y attribution en 10 categorías.</p>
                 <ul class="features">
-                    <li>50+ CRMs y herramientas</li>
-                    <li>10 categorías de detección</li>
-                    <li>Deep analysis con localStorage</li>
-                    <li>Export JSON &amp; HTML</li>
+                    <li>50+ structured detectors</li>
+                    <li>Deep localStorage analysis</li>
+                    <li>Attribution tools (Hyros, etc.)</li>
+                    <li>Dual JSON &amp; HTML export</li>
                 </ul>
                 <span class="badge">CRM / Automation</span>
             </a>
+
+            <a href="consent-compliance-scanner.html" class="tool-card" aria-label="Consent & Compliance Scanner">
+                <span class="emoji" aria-hidden="true">&#128737;</span>
+                <h2>Consent &amp; Compliance</h2>
+                <p>CMPs, Consent Mode v2, cookies pre-consent, tag conflicts y compliance scoring.</p>
+                <ul class="features">
+                    <li>12+ CMP platforms</li>
+                    <li>GA4 Consent Mode v2</li>
+                    <li>Cookie categorization</li>
+                    <li>Risk scoring (Low/Med/High)</li>
+                </ul>
+                <span class="badge">GDPR / CCPA</span>
+            </a>
+        </div>
+
+        <!-- Bookmarklets -->
+        <div class="bookmarklet-section">
+            <h2>Bookmarklets — One-Click Audit</h2>
+            <p>Drag any button below to your bookmarks bar. Then click it on any website to run the audit instantly — no copy-paste needed.</p>
+
+            <div class="bookmarklet-grid">
+                <div class="bookmarklet-item">
+                    <a href="javascript:void(function(){var s=document.createElement('script');s.src='https://roger-ssw.github.io/mis-herramientas/js/bookmarklets/full-audit.js?t='+Date.now();document.head.appendChild(s)})();" title="Drag me to your bookmarks bar">Full Audit</a>
+                    <p>All 4 tiers</p>
+                </div>
+                <div class="bookmarklet-item">
+                    <a href="javascript:void(function(){var s=document.createElement('script');s.src='https://roger-ssw.github.io/mis-herramientas/js/bookmarklets/wp-audit.js?t='+Date.now();document.head.appendChild(s)})();" title="Drag me to your bookmarks bar">WP Audit</a>
+                    <p>WordPress only</p>
+                </div>
+                <div class="bookmarklet-item">
+                    <a href="javascript:void(function(){var s=document.createElement('script');s.src='https://roger-ssw.github.io/mis-herramientas/js/bookmarklets/capi-analyzer.js?t='+Date.now();document.head.appendChild(s)})();" title="Drag me to your bookmarks bar">CAPI Analyzer</a>
+                    <p>Meta Pixel &amp; CAPI</p>
+                </div>
+                <div class="bookmarklet-item">
+                    <a href="javascript:void(function(){var s=document.createElement('script');s.src='https://roger-ssw.github.io/mis-herramientas/js/bookmarklets/crm-scanner.js?t='+Date.now();document.head.appendChild(s)})();" title="Drag me to your bookmarks bar">CRM Scanner</a>
+                    <p>Integrations</p>
+                </div>
+                <div class="bookmarklet-item">
+                    <a href="javascript:void(function(){var s=document.createElement('script');s.src='https://roger-ssw.github.io/mis-herramientas/js/bookmarklets/compliance.js?t='+Date.now();document.head.appendChild(s)})();" title="Drag me to your bookmarks bar">Compliance</a>
+                    <p>Consent &amp; cookies</p>
+                </div>
+            </div>
+
+            <div class="how-to-steps">
+                <h4>How to install:</h4>
+                <ol>
+                    <li>Show your bookmarks bar (Ctrl+Shift+B / Cmd+Shift+B)</li>
+                    <li>Drag the button above to your bookmarks bar</li>
+                    <li>Navigate to any website you want to audit</li>
+                    <li>Click the bookmarklet — the script runs automatically</li>
+                    <li>Check the console (F12) for results</li>
+                </ol>
+            </div>
         </div>
 
         <div class="footer">
-            <p>Herramientas de auditoría web by Roger SSW &bull; v2.0 &bull; 2025</p>
+            <p>Martech Audit Toolkit by Roger SSW &bull; v2.0 &bull; 2025</p>
         </div>
     </div>
 </body>
