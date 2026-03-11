@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad &amp; Tracking Network Analyzer - Martech Toolkit</title>
+    <link rel="stylesheet" href="css/shared.css">
+</head>
+<body>
+    <a href="index.html" class="home-button" title="Volver al inicio" aria-label="Volver al inicio">&#127968;</a>
+
+    <div class="container" style="max-width: 1400px;">
+        <div class="header">
+            <h1>Ad &amp; Tracking Network Analyzer</h1>
+            <p>Intercepta requests a ad platforms, GTM, attribution tools y compila DataLayer events en tiempo real</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number">Ad Pixels</div>
+                <div class="stat-label">Meta, Google, TikTok...</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">GTM</div>
+                <div class="stat-label">Tags &amp; triggers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">DataLayer</div>
+                <div class="stat-label">Events &amp; e-commerce</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">Attribution</div>
+                <div class="stat-label">Hyros, AnyTrack...</div>
+            </div>
+        </div>
+
+        <div class="main-card">
+            <div class="alert">
+                <strong>Focused on what matters:</strong>
+                <p>This tool ONLY captures requests to ad platforms (Meta, Google Ads, TikTok, etc.), tracking/attribution tools (Hyros, AnyTrack, Triple Whale), and GTM. It also compiles a full DataLayer event timeline with e-commerce data validation. Run it, navigate the site, then get a clean report of exactly what's firing and what data it's sending.</p>
+            </div>
+
+            <div class="info-grid" style="margin-bottom: 30px;">
+                <div class="info-card">
+                    <h3>Ad Platforms Tracked</h3>
+                    <ul>
+                        <li>Meta / Facebook (Pixel + CAPI signals)</li>
+                        <li>Google Ads (conversions, remarketing)</li>
+                        <li>Google Analytics (GA4 collect)</li>
+                        <li>TikTok Events API</li>
+                        <li>Pinterest Conversions</li>
+                        <li>Snapchat Pixel</li>
+                        <li>LinkedIn Insight</li>
+                        <li>Twitter / X Pixel</li>
+                        <li>Reddit Pixel</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>Attribution &amp; Tracking</h3>
+                    <ul>
+                        <li>Hyros (call tracking + attribution)</li>
+                        <li>AnyTrack (universal tracking)</li>
+                        <li>Triple Whale (e-commerce attribution)</li>
+                        <li>SegMetrics</li>
+                        <li>Wicked Reports</li>
+                        <li>Google Tag Manager (all tags)</li>
+                        <li>Segment CDP</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>DataLayer Compilation</h3>
+                    <ul>
+                        <li>Full event timeline with timestamps</li>
+                        <li>GA4 e-commerce event validation</li>
+                        <li>Missing field detection (items, value, currency)</li>
+                        <li>Consent events tracking</li>
+                        <li>Custom event capture</li>
+                        <li>Live monitoring (new pushes)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h3>Instructions:</h3>
+                <ol>
+                    <li>Open the target site and run this script in the console</li>
+                    <li>It captures everything already loaded + starts intercepting</li>
+                    <li>Navigate: view products, add to cart, start checkout</li>
+                    <li>Run <span class="highlight">adReport()</span> anytime to see captured data</li>
+                    <li>Run <span class="highlight">downloadAdReportHTML()</span> for a shareable report</li>
+                </ol>
+            </div>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="code-title">ad-tracking-network-analyzer.js</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar Script</button>
+                </div>
+                <pre><code>(function() {
+    console.clear();
+    console.log('%c AD & TRACKING NETWORK ANALYZER v1.0', 'background: #0891b2; color: white; font-size: 16px; padding: 10px; border-radius: 5px;');
+    console.log('%c Ad platforms, GTM, DataLayer & attribution tracking', 'color: #a0a0a0; font-style: italic;');
+    console.log('%c' + '='.repeat(55), 'color: #0891b2;');
+
+    var startTime = Date.now();
+    var adRequests = [];
+    var dataLayerTimeline = [];
+    var fbqEvents = [];
+    var gtagEvents = [];
+
+    // ─── AD & TRACKING PLATFORMS ONLY ────────────────────────
+    var adPlatforms = [
+        { name: 'Meta Pixel', patterns: ['facebook.com/tr', 'facebook.net/en_US/fbevents', 'connect.facebook.net'] },
+        { name: 'Google Ads', patterns: ['googleads.g.doubleclick.net', 'googleadservices.com/pagead', 'www.googleadservices.com'] },
+        { name: 'Google Analytics', patterns: ['google-analytics.com', 'analytics.google.com', '/g/collect', '/j/collect'] },
+        { name: 'GTM', patterns: ['googletagmanager.com/gtm.js', 'googletagmanager.com/gtag'] },
+        { name: 'Google DCM', patterns: ['doubleclick.net/activity', 'fls.doubleclick.net'] },
+        { name: 'TikTok', patterns: ['analytics.tiktok.com', 'business-api.tiktok.com'] },
+        { name: 'Pinterest', patterns: ['ct.pinterest.com', 'pinterest.com/v3'] },
+        { name: 'Snapchat', patterns: ['tr.snapchat.com', 'sc-static.net/scevent'] },
+        { name: 'LinkedIn', patterns: ['linkedin.com/px', 'linkedin.com/collect', 'snap.licdn.com', 'linkedin.com/li/'] },
+        { name: 'Twitter / X', patterns: ['ads-twitter.com', 'static.ads-twitter.com', 'analytics.twitter.com', 't.co/i/adsct'] },
+        { name: 'Reddit', patterns: ['alb.reddit.com/snoo', 'events.reddit.com'] },
+        { name: 'Hyros', patterns: ['hyros.com', 't.hyros.com', 'api.hyros.com'] },
+        { name: 'AnyTrack', patterns: ['anytrack.io', 'cdn.anytrack.io'] },
+        { name: 'Triple Whale', patterns: ['triplewhale.com', 'api.triplewhale.com'] },
+        { name: 'SegMetrics', patterns: ['segmetrics.io'] },
+        { name: 'Wicked Reports', patterns: ['wickedreports.com'] },
+        { name: 'Segment', patterns: ['api.segment.io', 'cdn.segment.com'] },
+        { name: 'Klaviyo', patterns: ['a.]klaviyo.com/api/track', 'klaviyo.com/onsite'] },
+        { name: 'ActiveCampaign', patterns: ['activehosted.com/proc'] }
+    ];
+
+    function matchPlatform(url) {
+        if (!url) return null;
+        for (var i = 0; i < adPlatforms.length; i++) {
+            for (var j = 0; j < adPlatforms[i].patterns.length; j++) {
+                if (url.indexOf(adPlatforms[i].patterns[j]) !== -1) return adPlatforms[i].name;
+            }
+        }
+        return null;
+    }
+
+    // ─── PAYLOAD PARSER ──────────────────────────────────────
+    function parsePayload(url, body) {
+        var data = {};
+
+        // Parse URL params
+        try {
+            var urlObj = new URL(url);
+            urlObj.searchParams.forEach(function(val, key) {
+                data[key] = val;
+            });
+        } catch(e) {
+            // Try to extract query string manually
+            var qIdx = url.indexOf('?');
+            if (qIdx !== -1) {
+                url.substring(qIdx + 1).split('&').forEach(function(pair) {
+                    var parts = pair.split('=');
+                    if (parts[0]) data[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+                });
+            }
+        }
+
+        // Parse body
+        if (body && typeof body === 'string') {
+            try {
+                var parsed = JSON.parse(body);
+                Object.keys(parsed).forEach(function(k) { data['body.' + k] = parsed[k]; });
+            } catch(e) {
+                // URL-encoded body
+                body.split('&').forEach(function(pair) {
+                    var parts = pair.split('=');
+                    if (parts[0]) {
+                        try { data['body.' + decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || ''); }
+                        catch(e2) { data['body.' + parts[0]] = parts[1] || ''; }
+                    }
+                });
+            }
+        }
+
+        return data;
+    }
+
+    function extractEventInfo(platform, payload) {
+        var info = {};
+
+        // Meta Pixel
+        if (platform === 'Meta Pixel') {
+            if (payload.ev) info.event = payload.ev;
+            if (payload.id) info.pixelId = payload.id;
+            if (payload.cd) {
+                try { info.customData = JSON.parse(payload.cd); } catch(e) { info.customData = payload.cd; }
+            }
+            if (payload.ud) info.userData = 'present (hashed)';
+            if (payload['body.event_id'] || payload.eid) info.eventId = payload['body.event_id'] || payload.eid;
+        }
+
+        // Google Analytics
+        if (platform === 'Google Analytics') {
+            if (payload.en) info.event = payload.en;
+            if (payload.tid) info.measurementId = payload.tid;
+            if (payload.ep) info.eventParams = payload.ep;
+            if (payload.v) info.version = payload.v;
+        }
+
+        // Google Ads
+        if (platform === 'Google Ads') {
+            if (payload.label) info.conversionLabel = payload.label;
+            if (payload.value) info.value = payload.value;
+            if (payload.currency) info.currency = payload.currency;
+        }
+
+        // TikTok
+        if (platform === 'TikTok') {
+            if (payload.event) info.event = payload.event;
+            if (payload['body.event']) info.event = payload['body.event'];
+        }
+
+        // Hyros
+        if (platform === 'Hyros') {
+            Object.keys(payload).forEach(function(k) {
+                if (k.indexOf('body.') === 0) info[k.replace('body.', '')] = payload[k];
+            });
+        }
+
+        return info;
+    }
+
+    function addAdRequest(entry) {
+        entry.timestamp = new Date().toISOString();
+        entry.elapsed = ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+        entry.payload = parsePayload(entry.url, entry.body);
+        entry.eventInfo = extractEventInfo(entry.platform, entry.payload);
+
+        adRequests.push(entry);
+
+        var eventStr = entry.eventInfo.event ? ' [' + entry.eventInfo.event + ']' : '';
+        var idStr = entry.eventInfo.pixelId ? ' (ID: ' + entry.eventInfo.pixelId + ')' : '';
+        console.log('  %c' + entry.platform + '%c' + eventStr + idStr + ' (' + entry.type + ', ' + entry.elapsed + ')',
+            'color: #FF8C42; font-weight: bold;', 'color: #a0a0a0;');
+    }
+
+    // ─── 1. DATALAYER COMPILATION ────────────────────────────
+    console.log('\n%c DATALAYER COMPILATION', 'background: #7c3aed; color: white; padding: 5px; border-radius: 3px;');
+
+    var ga4EcomEvents = ['view_item', 'view_item_list', 'select_item', 'add_to_cart', 'remove_from_cart',
+        'view_cart', 'begin_checkout', 'add_shipping_info', 'add_payment_info', 'purchase', 'refund'];
+
+    function analyzeDataLayerEntry(item, index) {
+        var entry = {
+            index: index,
+            timestamp: new Date().toISOString(),
+            event: item.event || null,
+            raw: item
+        };
+
+        // Consent events
+        if (item[0] === 'consent') {
+            entry.type = 'consent';
+            entry.consentAction = item[1];
+            entry.consentConfig = item[2];
+        }
+        // GA4 e-commerce
+        else if (item.event && ga4EcomEvents.indexOf(item.event) !== -1) {
+            entry.type = 'ecommerce';
+            var ecom = item.ecommerce || item;
+            entry.ecommerce = {
+                hasItems: !!(ecom.items || (item.ecommerce && item.ecommerce.items)),
+                hasValue: !!(ecom.value || (item.ecommerce && item.ecommerce.value)),
+                hasCurrency: !!(ecom.currency || (item.ecommerce && item.ecommerce.currency)),
+                hasTransactionId: !!(ecom.transaction_id || (item.ecommerce && item.ecommerce.transaction_id))
+            };
+            entry.ecommerce.missing = [];
+            if (!entry.ecommerce.hasItems) entry.ecommerce.missing.push('items');
+            if (!entry.ecommerce.hasValue) entry.ecommerce.missing.push('value');
+            if (!entry.ecommerce.hasCurrency) entry.ecommerce.missing.push('currency');
+            if (item.event === 'purchase' && !entry.ecommerce.hasTransactionId) entry.ecommerce.missing.push('transaction_id');
+
+            // Count items if present
+            var items = ecom.items || (item.ecommerce && item.ecommerce.items);
+            if (items && Array.isArray(items)) {
+                entry.ecommerce.itemCount = items.length;
+                entry.ecommerce.totalValue = ecom.value || (item.ecommerce && item.ecommerce.value) || 'not set';
+            }
+        }
+        // GTM events
+        else if (item.event && item.event.indexOf('gtm.') === 0) {
+            entry.type = 'gtm';
+        }
+        // Custom events
+        else if (item.event) {
+            entry.type = 'custom';
+        }
+        // Data push (no event)
+        else {
+            entry.type = 'data';
+        }
+
+        return entry;
+    }
+
+    if (window.dataLayer) {
+        console.log('  Existing dataLayer entries: ' + window.dataLayer.length);
+
+        // Compile existing entries
+        window.dataLayer.forEach(function(item, i) {
+            var entry = analyzeDataLayerEntry(item, i);
+            dataLayerTimeline.push(entry);
+
+            if (entry.type === 'ecommerce') {
+                var status = entry.ecommerce.missing.length ? '%c MISSING: ' + entry.ecommerce.missing.join(', ') : '%c OK';
+                var color = entry.ecommerce.missing.length ? 'color: #ef4444;' : 'color: #10b981;';
+                console.log('  [ecom] ' + entry.event + ' — items: ' + (entry.ecommerce.itemCount || '?') + ', value: ' + entry.ecommerce.totalValue + ' ' + status, color);
+            } else if (entry.type === 'consent') {
+                console.log('  [consent] ' + entry.consentAction + ': ' + JSON.stringify(entry.consentConfig));
+            }
+        });
+
+        // Monitor new pushes
+        var origPush = window.dataLayer.push;
+        window.dataLayer.push = function() {
+            var result = origPush.apply(this, arguments);
+
+            for (var i = 0; i < arguments.length; i++) {
+                var item = arguments[i];
+                var entry = analyzeDataLayerEntry(item, window.dataLayer.length - 1);
+                entry.live = true;
+                dataLayerTimeline.push(entry);
+
+                if (entry.event) {
+                    var prefix = entry.type === 'ecommerce' ? '[ecom]' : entry.type === 'consent' ? '[consent]' : '[event]';
+                    console.log('  %c[LIVE] ' + prefix + ' ' + entry.event, 'color: #FF8C42; font-weight: bold;');
+
+                    if (entry.type === 'ecommerce' && entry.ecommerce.missing.length) {
+                        console.log('    %cMISSING: ' + entry.ecommerce.missing.join(', '), 'color: #ef4444;');
+                    }
+                }
+            }
+
+            return result;
+        };
+        console.log('  dataLayer.push() interceptor active — live events will appear');
+    } else {
+        console.log('  No dataLayer found');
+    }
+
+    // ─── 2. FBQ INTERCEPTOR ──────────────────────────────────
+    console.log('\n%c FBQ EVENT INTERCEPTOR', 'background: #1877f2; color: white; padding: 5px; border-radius: 3px;');
+
+    if (window.fbq) {
+        var origFbq = window.fbq;
+        window.fbq = function() {
+            var args = Array.from(arguments);
+            var entry = {
+                timestamp: new Date().toISOString(),
+                elapsed: ((Date.now() - startTime) / 1000).toFixed(1) + 's',
+                action: args[0],
+                event: args[1],
+                params: args[2] || {},
+                hasEventId: !!(args[2] && args[2].event_id),
+                hasExternalId: !!(args[2] && args[2].external_id),
+                hasUserData: !!(args[2] && (args[2].em || args[2].ph || args[2].fn))
+            };
+            fbqEvents.push(entry);
+
+            if (args[0] === 'track' || args[0] === 'trackCustom') {
+                var capiFlag = entry.hasEventId ? ' %c[CAPI]' : '';
+                console.log('  %c[fbq] ' + args[0] + ': ' + args[1] + capiFlag,
+                    'color: #1877f2; font-weight: bold;',
+                    entry.hasEventId ? 'color: #10b981; font-weight: bold;' : '');
+                if (args[2]) {
+                    var params = Object.keys(args[2]).filter(function(k) { return ['value', 'currency', 'content_type', 'content_ids', 'event_id', 'external_id'].indexOf(k) !== -1; });
+                    if (params.length) {
+                        var details = params.map(function(k) { return k + ': ' + args[2][k]; }).join(', ');
+                        console.log('    ' + details);
+                    }
+                }
+            }
+
+            return origFbq.apply(this, arguments);
+        };
+        console.log('  fbq interceptor active');
+    } else {
+        console.log('  fbq not found');
+    }
+
+    // ─── 3. GTAG INTERCEPTOR ─────────────────────────────────
+    console.log('\n%c GTAG EVENT INTERCEPTOR', 'background: #ea4335; color: white; padding: 5px; border-radius: 3px;');
+
+    if (window.gtag) {
+        var origGtag = window.gtag;
+        window.gtag = function() {
+            var args = Array.from(arguments);
+            var entry = {
+                timestamp: new Date().toISOString(),
+                elapsed: ((Date.now() - startTime) / 1000).toFixed(1) + 's',
+                command: args[0],
+                eventOrId: args[1],
+                params: args[2] || {}
+            };
+            gtagEvents.push(entry);
+
+            if (args[0] === 'event') {
+                console.log('  %c[gtag] event: ' + args[1], 'color: #ea4335; font-weight: bold;');
+                if (args[2] && args[2].value) console.log('    value: ' + args[2].value + ' ' + (args[2].currency || ''));
+                if (args[2] && args[2].send_to) console.log('    send_to: ' + args[2].send_to);
+            }
+
+            return origGtag.apply(this, arguments);
+        };
+        console.log('  gtag interceptor active');
+    } else {
+        console.log('  gtag not found');
+    }
+
+    // ─── 4. NETWORK INTERCEPTION (ad platforms only) ─────────
+    console.log('\n%c NETWORK INTERCEPTION (ad & tracking only)', 'background: #dc2626; color: white; padding: 5px; border-radius: 3px;');
+
+    // fetch()
+    var origFetch = window.fetch;
+    window.fetch = function() {
+        var url = typeof arguments[0] === 'string' ? arguments[0] : (arguments[0] && arguments[0].url ? arguments[0].url : '');
+        var opts = arguments[1] || {};
+        var platform = matchPlatform(url);
+
+        if (platform) {
+            var body = null;
+            if (opts.body) {
+                try { body = typeof opts.body === 'string' ? opts.body : JSON.stringify(opts.body); } catch(e) {}
+            }
+            addAdRequest({ type: 'fetch', platform: platform, url: url, method: opts.method || 'GET', body: body });
+        }
+
+        return origFetch.apply(this, arguments);
+    };
+
+    // XMLHttpRequest
+    var origXhrOpen = XMLHttpRequest.prototype.open;
+    var origXhrSend = XMLHttpRequest.prototype.send;
+
+    XMLHttpRequest.prototype.open = function(method, url) {
+        this._captureMethod = method;
+        this._captureUrl = url;
+        this._capturePlatform = matchPlatform(url);
+        return origXhrOpen.apply(this, arguments);
+    };
+
+    XMLHttpRequest.prototype.send = function(body) {
+        if (this._capturePlatform) {
+            var bodyStr = null;
+            if (body) { try { bodyStr = typeof body === 'string' ? body : JSON.stringify(body); } catch(e) {} }
+            addAdRequest({ type: 'xhr', platform: this._capturePlatform, url: this._captureUrl, method: this._captureMethod || 'GET', body: bodyStr });
+        }
+        return origXhrSend.apply(this, arguments);
+    };
+
+    // sendBeacon
+    var origBeacon = navigator.sendBeacon;
+    if (origBeacon) {
+        navigator.sendBeacon = function(url, data) {
+            var platform = matchPlatform(url);
+            if (platform) {
+                var body = null;
+                if (data) { try { body = typeof data === 'string' ? data : JSON.stringify(data); } catch(e) {} }
+                addAdRequest({ type: 'beacon', platform: platform, url: url, method: 'POST', body: body });
+            }
+            return origBeacon.apply(this, arguments);
+        };
+    }
+
+    // Image pixel fires
+    var imgObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.tagName === 'IMG' && node.src) {
+                    var platform = matchPlatform(node.src);
+                    if (platform) {
+                        addAdRequest({ type: 'img-pixel', platform: platform, url: node.src, method: 'GET', body: null });
+                    }
+                }
+            });
+        });
+    });
+    imgObserver.observe(document.body, { childList: true, subtree: true });
+
+    console.log('  All interceptors active (fetch, XHR, beacon, img pixels)');
+
+    // ─── 5. ALREADY-LOADED AD RESOURCES ──────────────────────
+    console.log('\n%c ALREADY-LOADED AD RESOURCES', 'background: #065f46; color: white; padding: 5px; border-radius: 3px;');
+
+    var perfEntries = performance.getEntriesByType('resource');
+    var adResources = {};
+    var adTransferSize = 0;
+
+    perfEntries.forEach(function(e) {
+        var platform = matchPlatform(e.name);
+        if (platform) {
+            if (!adResources[platform]) adResources[platform] = { count: 0, size: 0 };
+            adResources[platform].count++;
+            adResources[platform].size += e.transferSize || 0;
+            adTransferSize += e.transferSize || 0;
+        }
+    });
+
+    Object.keys(adResources).forEach(function(p) {
+        console.log('  ' + p + ': ' + adResources[p].count + ' resources, ' + (adResources[p].size / 1024).toFixed(1) + ' KB');
+    });
+    console.log('  Total ad/tracking overhead: ' + (adTransferSize / 1024).toFixed(1) + ' KB');
+
+    console.log('\n%c Navigate the site to capture events. Run adReport() anytime.', 'color: #FF8C42; font-weight: bold;');
+
+    // ─── REPORT FUNCTION ─────────────────────────────────────
+    window.adReport = function() {
+        console.log('\n%c AD & TRACKING REPORT', 'background: #0891b2; color: white; font-size: 14px; padding: 10px; border-radius: 5px;');
+        console.log('%c' + '='.repeat(55), 'color: #0891b2;');
+
+        // Network requests by platform
+        var byPlatform = {};
+        adRequests.forEach(function(r) {
+            if (!byPlatform[r.platform]) byPlatform[r.platform] = [];
+            byPlatform[r.platform].push(r);
+        });
+
+        console.log('\n  AD NETWORK REQUESTS: ' + adRequests.length);
+        Object.keys(byPlatform).sort(function(a, b) { return byPlatform[b].length - byPlatform[a].length; }).forEach(function(p) {
+            console.log('    ' + p + ': ' + byPlatform[p].length + ' requests');
+            byPlatform[p].forEach(function(r) {
+                if (r.eventInfo.event) console.log('      ' + r.eventInfo.event + (r.eventInfo.eventId ? ' [event_id]' : '') + ' (' + r.elapsed + ')');
+            });
+        });
+
+        // fbq events
+        console.log('\n  FBQ EVENTS: ' + fbqEvents.length);
+        fbqEvents.forEach(function(e) {
+            if (e.action === 'track' || e.action === 'trackCustom') {
+                console.log('    ' + e.event + (e.hasEventId ? ' [CAPI]' : '') + ' (' + e.elapsed + ')');
+            }
+        });
+
+        // gtag events
+        console.log('\n  GTAG EVENTS: ' + gtagEvents.length);
+        gtagEvents.forEach(function(e) {
+            if (e.command === 'event') console.log('    ' + e.eventOrId + ' (' + e.elapsed + ')');
+        });
+
+        // DataLayer
+        var ecomEvents = dataLayerTimeline.filter(function(e) { return e.type === 'ecommerce'; });
+        var consentEvents = dataLayerTimeline.filter(function(e) { return e.type === 'consent'; });
+        var customEvents = dataLayerTimeline.filter(function(e) { return e.type === 'custom'; });
+
+        console.log('\n  DATALAYER: ' + dataLayerTimeline.length + ' entries');
+        console.log('    E-commerce events: ' + ecomEvents.length);
+        ecomEvents.forEach(function(e) {
+            var status = e.ecommerce.missing.length ? 'MISSING: ' + e.ecommerce.missing.join(', ') : 'complete';
+            console.log('      ' + e.event + ' — ' + status);
+        });
+        console.log('    Consent events: ' + consentEvents.length);
+        console.log('    Custom events: ' + customEvents.length);
+        customEvents.forEach(function(e) { console.log('      ' + e.event); });
+
+        // Performance
+        console.log('\n  AD/TRACKING OVERHEAD: ' + (adTransferSize / 1024).toFixed(1) + ' KB');
+
+        return {
+            adRequests: adRequests, byPlatform: byPlatform,
+            fbqEvents: fbqEvents, gtagEvents: gtagEvents,
+            dataLayer: dataLayerTimeline, adResources: adResources,
+            adTransferSize: adTransferSize
+        };
+    };
+
+    // ─── HTML EXPORT ─────────────────────────────────────────
+    window.downloadAdReportHTML = function() {
+        var report = window.adReport();
+        var h = window.location.hostname || 'local';
+        var dt = new Date().toISOString().slice(0, 10);
+        var duration = ((Date.now() - startTime) / 1000).toFixed(0);
+
+        var ecomEvents = dataLayerTimeline.filter(function(e) { return e.type === 'ecommerce'; });
+        var customEvents = dataLayerTimeline.filter(function(e) { return e.type === 'custom'; });
+
+        // Platform rows
+        var platformRows = Object.keys(report.byPlatform).sort(function(a, b) { return report.byPlatform[b].length - report.byPlatform[a].length; }).map(function(p) {
+            var reqs = report.byPlatform[p];
+            var events = reqs.filter(function(r) { return r.eventInfo.event; }).map(function(r) { return r.eventInfo.event; });
+            var evStr = events.length ? events.join(', ') : '-';
+            return '<tr><td style="padding:10px;color:#FFB088;font-weight:600">' + p + '</td><td style="padding:10px;color:#a0a0a0;text-align:center">' + reqs.length + '</td><td style="padding:10px;color:#808080;font-size:0.9em">' + evStr + '</td></tr>';
+        }).join('');
+
+        // fbq rows
+        var fbqRows = fbqEvents.filter(function(e) { return e.action === 'track' || e.action === 'trackCustom'; }).map(function(e) {
+            var capiFlag = e.hasEventId ? '<span style="color:#10b981;font-weight:600"> CAPI</span>' : '';
+            var val = e.params.value ? e.params.value + ' ' + (e.params.currency || '') : '-';
+            return '<tr><td style="padding:8px;color:#FFB088">' + e.event + capiFlag + '</td><td style="padding:8px;color:#a0a0a0">' + val + '</td><td style="padding:8px;color:#808080">' + e.elapsed + '</td></tr>';
+        }).join('');
+
+        // gtag rows
+        var gtagRows = gtagEvents.filter(function(e) { return e.command === 'event'; }).map(function(e) {
+            var val = e.params.value ? e.params.value + ' ' + (e.params.currency || '') : '-';
+            var sendTo = e.params.send_to || '-';
+            return '<tr><td style="padding:8px;color:#FFB088">' + e.eventOrId + '</td><td style="padding:8px;color:#a0a0a0">' + val + '</td><td style="padding:8px;color:#808080">' + sendTo + '</td></tr>';
+        }).join('');
+
+        // ecom rows
+        var ecomRows = ecomEvents.map(function(e) {
+            var statusColor = e.ecommerce.missing.length ? '#ef4444' : '#10b981';
+            var status = e.ecommerce.missing.length ? 'Missing: ' + e.ecommerce.missing.join(', ') : 'Complete';
+            return '<tr><td style="padding:8px;color:#FFB088">' + e.event + '</td><td style="padding:8px;color:#a0a0a0">' + (e.ecommerce.itemCount || '-') + '</td><td style="padding:8px;color:#a0a0a0">' + e.ecommerce.totalValue + '</td><td style="padding:8px;color:' + statusColor + '">' + status + '</td></tr>';
+        }).join('');
+
+        // Resource rows
+        var resRows = Object.keys(adResources).sort(function(a, b) { return adResources[b].size - adResources[a].size; }).map(function(p) {
+            return '<tr><td style="padding:8px;color:#FFB088">' + p + '</td><td style="padding:8px;color:#a0a0a0">' + adResources[p].count + '</td><td style="padding:8px;color:#a0a0a0">' + (adResources[p].size / 1024).toFixed(1) + ' KB</td></tr>';
+        }).join('');
+
+        var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Ad & Tracking Report - ' + h + '</title>';
+        html += '<style>body{font-family:system-ui,sans-serif;background:#0a0a0a;color:#e5e5e5;padding:40px 20px;max-width:1000px;margin:0 auto}';
+        html += 'h1{color:#FF8C42;font-size:2em}h2{color:#FFB088;margin-top:30px;margin-bottom:15px;padding-bottom:8px;border-bottom:1px solid #222}';
+        html += '.section{background:#141414;padding:20px;border-radius:12px;margin-bottom:20px;border:1px solid #222}';
+        html += 'table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid rgba(255,255,255,0.05);vertical-align:top;text-align:left}';
+        html += 'th{color:#FF8C42;font-weight:600;padding:10px}';
+        html += '.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:20px}';
+        html += '.kpi{background:#0a0a0a;padding:20px;border-radius:10px;text-align:center;border:1px solid #222}';
+        html += '.kpi .num{font-size:1.6em;font-weight:bold;color:#FF8C42}.kpi .label{color:#808080;font-size:0.85em;margin-top:5px}';
+        html += '</style></head><body>';
+
+        html += '<h1>Ad & Tracking Network Report</h1>';
+        html += '<p style="color:#808080;margin-bottom:30px">Site: ' + h + ' | Date: ' + dt + ' | Capture duration: ' + duration + 's</p>';
+
+        // KPIs
+        html += '<div class="grid">';
+        html += '<div class="kpi"><div class="num">' + adRequests.length + '</div><div class="label">Ad Requests</div></div>';
+        html += '<div class="kpi"><div class="num">' + fbqEvents.filter(function(e){return e.action==='track';}).length + '</div><div class="label">fbq Events</div></div>';
+        html += '<div class="kpi"><div class="num">' + gtagEvents.filter(function(e){return e.command==='event';}).length + '</div><div class="label">gtag Events</div></div>';
+        html += '<div class="kpi"><div class="num">' + ecomEvents.length + '</div><div class="label">E-com Events</div></div>';
+        html += '<div class="kpi"><div class="num">' + dataLayerTimeline.length + '</div><div class="label">DataLayer Entries</div></div>';
+        html += '<div class="kpi"><div class="num">' + (adTransferSize / 1024).toFixed(0) + ' KB</div><div class="label">Ad Overhead</div></div>';
+        html += '</div>';
+
+        // Platform requests
+        if (platformRows) {
+            html += '<div class="section"><h2>Ad Platform Requests</h2><table><tr><th>Platform</th><th>Requests</th><th>Events Detected</th></tr>' + platformRows + '</table></div>';
+        }
+
+        // fbq
+        if (fbqRows) {
+            html += '<div class="section"><h2>Meta Pixel Events (fbq)</h2><table><tr><th>Event</th><th>Value</th><th>Time</th></tr>' + fbqRows + '</table></div>';
+        }
+
+        // gtag
+        if (gtagRows) {
+            html += '<div class="section"><h2>Google Events (gtag)</h2><table><tr><th>Event</th><th>Value</th><th>Send To</th></tr>' + gtagRows + '</table></div>';
+        }
+
+        // Ecommerce
+        if (ecomRows) {
+            html += '<div class="section"><h2>DataLayer E-commerce Events</h2><table><tr><th>Event</th><th>Items</th><th>Value</th><th>Status</th></tr>' + ecomRows + '</table></div>';
+        }
+
+        // Custom events
+        if (customEvents.length) {
+            html += '<div class="section"><h2>DataLayer Custom Events (' + customEvents.length + ')</h2><p style="color:#a0a0a0">' + customEvents.map(function(e) { return e.event; }).join(', ') + '</p></div>';
+        }
+
+        // Resources
+        if (resRows) {
+            html += '<div class="section"><h2>Ad/Tracking Resource Overhead</h2><table><tr><th>Platform</th><th>Resources</th><th>Transfer Size</th></tr>' + resRows + '</table></div>';
+        }
+
+        html += '<p style="color:#606060;text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid #222">Generated by Martech Toolkit — roger-ssw.github.io/mis-herramientas</p>';
+        html += '</body></html>';
+
+        var blob = new Blob([html], {type:'text/html'});
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a'); a.href = url; a.download = 'ad-tracking_' + h + '_' + dt + '.html'; a.click();
+        URL.revokeObjectURL(url);
+        console.log('  HTML report downloaded');
+    };
+
+    window.downloadAdReportJSON = function() {
+        var report = window.adReport();
+        var d = JSON.stringify(report, null, 2);
+        var uri = 'data:application/json;charset=utf-8,' + encodeURIComponent(d);
+        var name = 'ad-tracking_' + (window.location.hostname || 'local') + '_' + new Date().toISOString().slice(0,10) + '.json';
+        var a = document.createElement('a'); a.href = uri; a.download = name; a.click();
+    };
+
+    console.log('\n  Commands:');
+    console.log('  adReport()              — show current analysis');
+    console.log('  downloadAdReportJSON()  — export JSON');
+    console.log('  downloadAdReportHTML()  — export HTML report');
+})();</code></pre>
+            </div>
+
+            <div class="feature-grid" style="margin-top: 30px;">
+                <div class="feature-card">
+                    <h4>Ad Platform Requests</h4>
+                    <p>Captures only requests to Meta, Google Ads, TikTok, Pinterest, Snapchat, LinkedIn, Twitter/X, Reddit.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Attribution Tracking</h4>
+                    <p>Hyros, AnyTrack, Triple Whale, SegMetrics, Wicked Reports — every request captured with payload.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>fbq() Interceptor</h4>
+                    <p>Captures every Meta Pixel event with value, currency, event_id (CAPI), and external_id.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>gtag() Interceptor</h4>
+                    <p>Captures every Google event with send_to destination, value, and conversion parameters.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>DataLayer Timeline</h4>
+                    <p>Full compilation with e-commerce validation. Flags missing items, value, currency, transaction_id.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Payload Parsing</h4>
+                    <p>Decodes URL params and request bodies. Shows exactly what data each pixel sends.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/shared.js"></script>
+</body>
+</html>
